@@ -66,6 +66,7 @@ CREATE TABLE Feedback (
     FOREIGN KEY (user_id) REFERENCES User(user_id)
 );
 
+
 CREATE TABLE JobFeed (
     feed_id VARCHAR(255) PRIMARY KEY,
     user_id VARCHAR(255),
@@ -73,6 +74,12 @@ CREATE TABLE JobFeed (
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
     posted_date DATETIME NOT NULL,
+    salary_range VARCHAR(255),
+    requirements JSON,
+    job_type ENUM('Fulltime', 'Remote', 'Partime'),
+    company_details TEXT,
+    company_logo VARCHAR(255),
+    background_picture VARCHAR(255),
+    location VARCHAR(255),
     FOREIGN KEY (user_id) REFERENCES User(user_id)
 );
-    

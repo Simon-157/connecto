@@ -10,6 +10,7 @@ class User {
   Map<String, dynamic>? skills;
   dynamic location; 
   String role;
+  String  address;
 
   User({
     required this.userId,
@@ -20,7 +21,8 @@ class User {
     this.bio,
     this.skills,
     this.location,
-    required this.role,
+    required this.role, 
+    required  this.address,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -33,7 +35,8 @@ class User {
       bio: json['bio'],
       skills: jsonDecode(json['skills']),
       location: json['location'],
-      role: json['role'],
+      role: json['role'], 
+      address: json['address'],
     );
   }
 
@@ -48,6 +51,7 @@ class User {
       'skills': jsonEncode(skills),
       'location': location,
       'role': role,
+      'address': address,
     };
   }
 }
