@@ -32,9 +32,9 @@ class ConnectoApp extends StatelessWidget {
       home: SplashScreen(),
       // home: PageNavigation(),
       routes: {
-        '/':(context) => PageNavigation(),
+        '/home':(context) => PageNavigation(),
         '/login': (context) => LoginScreen(),
-        '/register': (context) => const RegistrationScreen(),
+        '/register': (context) =>  RegisterScreen(),
       },
     );
   }

@@ -1,5 +1,6 @@
-import 'package:connecto/screens/auth/login_screen.dart';
+import 'package:connecto/screens/onboarding/onboarding_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -17,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
     await Future.delayed(const Duration(seconds: 3), () {});
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => LoginScreen()), 
+      MaterialPageRoute(builder: (context) => OnboardingScreen()), 
     );
   }
 
@@ -29,11 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-              'assets/logo.png', 
-              height: 100.0,
-              width: 100.0,
-            ),
+            SvgPicture.asset('assets/icons/logo.svg'),
             const SizedBox(height: 20),
             const Text(
               'Connecto',

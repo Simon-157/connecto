@@ -1,3 +1,4 @@
+import 'package:connecto/screens/auth/login_screen.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -45,66 +46,75 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void onGetStarted() {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => HomePage()),
+      MaterialPageRoute(builder: (context) => LoginScreen()),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        alignment: Alignment.center,
-        children: [
-          PageView(
-            controller: _pageController,
-            onPageChanged: onPageChanged,
-            children: [
-              buildPage(
-                image: 'assets/onboarding1.png', 
-                title: 'Join Us & Explore Thousand',
-                subtitle: 'of Great Job',
-              ),
-              buildPage(
-                image: 'assets/onboarding2.png',
-                title: 'Find Mentors Easily',
-                subtitle: 'Connect with professionals in your field',
-              ),
-              buildPage(
-                image: 'assets/onboarding3.png', 
-                title: 'Kickstart Your Career',
-                subtitle: 'Get job offers and internships',
-                isLastPage: true,
-              ),
-            ],
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Colors.purple, Colors.blue],
           ),
-          Positioned(
-            bottom: 20,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(3, (index) => buildDot(index)),
+        ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            PageView(
+              controller: _pageController,
+              onPageChanged: onPageChanged,
+              children: [
+                buildPage(
+                  image: 'assets/images/onboarding1.png', 
+                  title: 'Join Us & Explore Thousand',
+                  subtitle: 'of Great Job',
+                ),
+                buildPage(
+                  image: 'assets/images/onboarding1.png',
+                  title: 'Find Mentors Easily',
+                  subtitle: 'Connect with professionals in your field',
+                ),
+                buildPage(
+                  image: 'assets/images/onboarding1.png', 
+                  title: 'Kickstart Your Career',
+                  subtitle: 'Get job offers and internships',
+                  isLastPage: true,
+                ),
+              ],
             ),
-          ),
-          Positioned(
-            bottom: 80,
-            child: currentIndex != 2
-                ? ElevatedButton(
-                    onPressed: onNext,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.cyan, 
-                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+            Positioned(
+              bottom: 20,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(3, (index) => buildDot(index)),
+              ),
+            ),
+            Positioned(
+              bottom: 80,
+              child: currentIndex != 2
+                  ? ElevatedButton(
+                      onPressed: onNext,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.cyan, 
+                        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                      ),
+                      child: const Text('Next'),
+                    )
+                  : ElevatedButton(
+                      onPressed: onGetStarted,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.cyan, 
+                        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                      ),
+                      child: const Text('Get Started'),
                     ),
-                    child: const Text('Next'),
-                  )
-                : ElevatedButton(
-                    onPressed: onGetStarted,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.cyan, 
-                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-                    ),
-                    child: const Text('Get Started'),
-                  ),
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -121,6 +131,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           style: const TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
         ),
         const SizedBox(height: 10),
@@ -129,6 +140,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           textAlign: TextAlign.center,
           style: const TextStyle(
             fontSize: 18,
+            color: Colors.white,
           ),
         ),
         const SizedBox(height: 20),
@@ -136,7 +148,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ElevatedButton(
             onPressed: onGetStarted,
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.cyan, // Replace with your theme color
+              backgroundColor: Colors.cyan, 
               padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
             ),
             child: const Text('Get Started'),
