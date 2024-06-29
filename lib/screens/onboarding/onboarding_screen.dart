@@ -56,7 +56,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -121,43 +121,36 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
+  
   Widget buildPage({required String image, required String title, required String subtitle, bool isLastPage = false}) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Image.asset(image, height: 300),
-        const SizedBox(height: 20),
-        Text(
-          title,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Image.asset(image, height: 300),
+      const SizedBox(height: 20),
+      Text(
+        title,
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
         ),
-        const SizedBox(height: 10),
-        Text(
-          subtitle,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 18,
-            color: Colors.white,
-          ),
+      ),
+      const SizedBox(height: 10),
+      Text(
+        subtitle,
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+          fontSize: 18,
+          color: Colors.white,
         ),
-        const SizedBox(height: 20),
-        if (isLastPage)
-          ElevatedButton(
-            onPressed: onGetStarted,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.cyan, 
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
-            ),
-            child: const Text('Get Started'),
-          ),
-      ],
-    );
-  }
+      ),
+    
+    ],
+  );
+}
+
 
   Widget buildDot(int index) {
     return Container(

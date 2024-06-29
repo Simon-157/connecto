@@ -30,7 +30,6 @@ class ConnectoApp extends StatelessWidget {
             surface: Colors.white),
       ),
       home: SplashScreen(),
-      // home: PageNavigation(),
       routes: {
         '/home':(context) => PageNavigation(),
         '/login': (context) => LoginScreen(),

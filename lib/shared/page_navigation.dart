@@ -1,3 +1,4 @@
+import 'package:connecto/screens/jobs/jobs_feed.dart';
 import 'package:connecto/shared/bottom_snake_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -33,9 +34,9 @@ class _PageNavigationState extends State<PageNavigation> {
             _selectedIndex = index;
           });
         },
-        children: const <Widget>[
-          Center(child: Text('Home Page')),
-          Center(child: Text('Explore Page')),
+        children:  <Widget>[
+          JobFeedScreen(),
+          const Center(child: Text('Explore Page')),
           Center(child: Text('Add New Page')),
           Center(child: Text('Calendar Page')),
           Center(child: Text('Network Page')),
