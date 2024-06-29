@@ -34,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: kToolbarHeight), // Adjust for status bar
+            const SizedBox(height: kToolbarHeight), 
             const Text(
               "Welcome,",
               style: TextStyle(
@@ -101,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       alignment: Alignment.centerRight,
                       child: TextButton(
                         onPressed: () {
-                          // Add forgot password logic here
+                          // TODO: forgot password logic here
                         },
                         child: const Text(
                           "Forgot Password?",
@@ -143,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       children: [
                         ElevatedButton.icon(
                           onPressed: () {
-                            // Add Google login logic here
+                            // TODO: Google login logic here
                           },
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.black,
@@ -167,7 +167,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(width: 10.0),
                         ElevatedButton.icon(
                           onPressed: () {
-                            // Add Facebook login logic here
+                            // TODO: Facebook login logic here
                           },
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.black,

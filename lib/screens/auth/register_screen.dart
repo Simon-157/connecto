@@ -121,7 +121,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     const SizedBox(height: 20.0),
                     ElevatedButton(
                       onPressed: () {
-                        // Add registration logic here
+                        // TODO: registration logic here
                         Navigator.pushNamed(context, '/home');
                       },
                       style: ElevatedButton.styleFrom(
@@ -153,7 +153,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       children: [
                         ElevatedButton.icon(
                           onPressed: () {
-                            // Add Google registration logic here
+                            // TODO: Google registration logic here
                           },
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.black,
@@ -177,7 +177,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         const SizedBox(width: 10.0),
                         ElevatedButton.icon(
                           onPressed: () {
-                            // Add Facebook registration logic here
+                            // TODO: Facebook registration logic here
                           },
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.black,
