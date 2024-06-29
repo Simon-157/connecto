@@ -1,4 +1,5 @@
 import 'package:connectivity/connectivity.dart';
+import 'package:connecto/screens/jobs/job_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:connecto/models/job_feed_model.dart';
 import 'package:connecto/utils/data.dart';
@@ -9,7 +10,7 @@ class JobFeedScreen extends StatefulWidget {
 }
 
 class _JobFeedScreenState extends State<JobFeedScreen> {
-  bool _isConnected = true; // Assume initially connected
+  bool _isConnected = true; 
 
   @override
   void initState() {
@@ -185,7 +186,15 @@ class PopularJobCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return  GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => JobDetailScreen(job: jobFeed),
+          ));
+      },
+      child: Container(
       width: 300,
       margin: const EdgeInsets.only(right: 16),
       padding: const EdgeInsets.all(16),
@@ -231,7 +240,7 @@ class PopularJobCard extends StatelessWidget {
           ),
         ],
       ),
-    );
+    ));
   }
 }
 

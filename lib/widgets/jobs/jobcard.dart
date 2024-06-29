@@ -1,4 +1,3 @@
-// job_card.dart
 import 'package:connecto/models/job_feed_model.dart';
 import 'package:flutter/material.dart';
 
