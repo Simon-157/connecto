@@ -14,6 +14,7 @@ class JobFeed {
   String? companyLogo;
   String? backgroundPicture;
   String? location;
+  Map<String, double> latlong;
 
   JobFeed({
     required this.feedId,
@@ -28,7 +29,7 @@ class JobFeed {
     this.companyDetails,
     this.companyLogo,
     this.backgroundPicture,
-    this.location,
+    this.location,   required this.latlong,
   });
 
   factory JobFeed.fromJson(Map<String, dynamic> json) {
@@ -52,7 +53,8 @@ class JobFeed {
       companyDetails: json['company_details'],
       companyLogo: json['company_logo'],
       backgroundPicture: json['background_picture'],
-      location: json['location'],
+      location: json['location'], 
+      latlong: jsonDecode(json['latlong']),
     );
   }
 
@@ -71,6 +73,7 @@ class JobFeed {
       'company_logo': companyLogo,
       'background_picture': backgroundPicture,
       'location': location,
+      'latlong': jsonEncode(latlong),
     };
   }
 }
