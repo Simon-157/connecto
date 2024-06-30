@@ -32,33 +32,46 @@ class _LocationExploreScreenState extends State<LocationExploreScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          IndexedStack(
-            index: _selectedIndex,
-            children: _widgetOptions.map((widget) {
-              if (widget is MapWidget) {
-                return SizedBox.expand(child: widget);
-              }
-              return widget;
-            }).toList(),
-          ),
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: SafeArea(
-              child: TabBar(
-                selectedIndex: _selectedIndex,
-                onTap: _onItemTapped,
-              ),
+  return Scaffold(
+    body: Stack(
+      children: [
+        IndexedStack(
+          index: _selectedIndex,
+          children: _widgetOptions.map((widget) {
+            if (widget is MapWidget) {
+              return SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                scrollDirection: Axis.vertical,
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  scrollDirection: Axis.horizontal,
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    child: widget,
+                  ),
+                ),
+              );
+            }
+            return widget;
+          }).toList(),
+        ),
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: SafeArea(
+            child: TabBar(
+              selectedIndex: _selectedIndex,
+              onTap: _onItemTapped,
             ),
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
+
 }
 
 class TabBar extends StatelessWidget {

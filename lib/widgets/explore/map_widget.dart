@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:get/get.dart';
@@ -10,7 +12,7 @@ import 'package:location/location.dart';
 class MapWidget extends StatefulWidget {
   final List<LatLng> locations;
 
-  const MapWidget({super.key, required this.locations});
+  const MapWidget({Key? key, required this.locations}) : super(key: key);
 
   @override
   State<MapWidget> createState() => _MapWidgetState();
@@ -93,46 +95,54 @@ class _MapWidgetState extends State<MapWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      height: 300,
-      width: double.infinity,
-      alignment: Alignment.center,
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-        color: Colors.grey,
-      ),
-      child: Obx(() {
-        if (_locationController.isAccessingLocation.value) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (_locationController.userLocation.value == null) {
-          return const Center(child: CircularProgressIndicator());
-        } else {
-          final currentLocation = _locationController.userLocation.value;
-          return GoogleMap(
-            initialCameraPosition: CameraPosition(
-              target: _kMapCenter,
-              zoom: 13,
-            ),
-            markers: _markers,
-            polylines: _polylines,
-            onMapCreated: (GoogleMapController controller) {
-              _controller = controller;
-              _controller.animateCamera(
-                CameraUpdate.newCameraPosition(
-                  CameraPosition(
-                    target: LatLng(
-                     currentLocation?.latitude ?? 5.574548042290121,
-                      currentLocation?.longitude ?? -0.19716657097514453,
-                    ),
-                    zoom: 13,
-                  ),
+    return SingleChildScrollView(
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 10),
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        alignment: Alignment.center,
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+          color: Colors.grey,
+        ),
+        child: Obx(() {
+          if (_locationController.isAccessingLocation.value) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (_locationController.userLocation.value == null) {
+            return const Center(child: CircularProgressIndicator());
+          } else {
+            final currentLocation = _locationController.userLocation.value;
+            return SizedBox(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+              child: GoogleMap(
+                initialCameraPosition: CameraPosition(
+                  target: _kMapCenter,
+                  zoom: 13,
                 ),
-              );
-            },
-          );
-        }
-      }),
+                markers: _markers,
+                polylines: _polylines,
+                onMapCreated: (GoogleMapController controller) {
+                  _controller = controller;
+                  _controller.animateCamera(
+                    CameraUpdate.newCameraPosition(
+                      CameraPosition(
+                        target: LatLng(
+                          currentLocation?.latitude ?? 5.574548042290121,
+                          currentLocation?.longitude ?? -0.19716657097514453,
+                        ),
+                        zoom: 13,
+                      ),
+                    ),
+                  );
+                },
+                gestureRecognizers: Set()
+                  ..add(Factory<EagerGestureRecognizer>(() => EagerGestureRecognizer())),
+              ),
+            );
+          }
+        }),
+      ),
     );
   }
 }
