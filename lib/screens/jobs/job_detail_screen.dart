@@ -162,7 +162,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
           ),
           Positioned(
             top:
-                190, // Adjust this value as needed to align with the SliverAppBar
+                190, 
             left: 0,
             right: 0,
             child: Container(
@@ -305,19 +305,19 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
           Positioned(
             left: 0,
             right: 0,
-            bottom: 16.0, // Adjust this value as needed
+            bottom: 16.0, 
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 FloatingActionButton(
                   onPressed: () {
-                    // Implement your chat logic here
+                    // TODO:Implement chat logic 
                   },
                   child: const Icon(Icons.chat),
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    // Implement your apply logic here
+                    // TODO:Implement apply logic here
                   },
                   child: const Text('Apply Now'),
                   style: ElevatedButton.styleFrom(

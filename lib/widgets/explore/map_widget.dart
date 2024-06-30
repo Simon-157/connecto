@@ -1,5 +1,9 @@
 import 'dart:async';
 
+// import 'package:connecto/models/job_feed_model.dart';
+// import 'package:connecto/models/user_model.dart';
+import 'package:connecto/utils/data.dart';
+import 'package:connecto/widgets/explore/feeds_found_modal.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -36,13 +40,12 @@ class _MapWidgetState extends State<MapWidget> {
 
   @override
   void dispose() {
-    // Cancel the subscription to location updates
+    // Cancel subscription to location updates
     _locationSubscription?.cancel();
     super.dispose();
   }
 
   Future<void> _initializeLocation() async {
-    // Use the Rx stream directly from LocationController
     _locationSubscription = _locationController.userLocation.listen((locationData) {
       if (mounted) {
         if (locationData != null) {
@@ -61,20 +64,39 @@ class _MapWidgetState extends State<MapWidget> {
       }
     });
 
-    // Trigger location retrieval
+    // location retrieval
     await _locationService.getUserLocation(controller: _locationController);
   }
 
   void _initializeMarkersAndPolylines() {
-    widget.locations.forEach((LatLng location) {
+    List<Color> polylineColors = Colors.primaries;
+
+    _markers.clear();
+    _polylines.clear();
+
+    for (int i = 0; i < widget.locations.length; i++) {
+      LatLng location = widget.locations[i];
+
+      Color markerColor = polylineColors[i % polylineColors.length];
+
       _markers.add(Marker(
         markerId: MarkerId(location.toString()),
         position: location,
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
+        onTap: () {
+          _showFoundFeedModal(location);
+        },
       ));
-    });
 
-    if (_locationController.userLocation.value != null) {
-      _updatePolylines(_locationController.userLocation.value!);
+      _polylines.add(Polyline(
+        polylineId: PolylineId(location.toString()),
+        points: [
+          LatLng(_locationController.userLocation.value!.latitude!, _locationController.userLocation.value!.longitude!),
+          location,
+        ],
+        color: markerColor,
+        width: 2,
+      ));
     }
   }
 
@@ -91,6 +113,22 @@ class _MapWidgetState extends State<MapWidget> {
         width: 2,
       ));
     });
+  }
+
+  void _showFoundFeedModal(LatLng location) {
+
+    // List<JobFeed> jobFeeds = dummyJobFeeds.where((feed) => feed.latlong['latitude'] == location.latitude && feed.latlong['longitude'] == location.longitude).toList();
+    // List<User> mentors = dummyMentors.where((mentor) => mentor.latlong['latitude'] == location.latitude && mentor.latlong['longitude'] == location.longitude).toList(); 
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return FoundFeedModal(
+          jobFeeds: jobFeedDataList.sublist(0, 4),
+          mentors: userDataList.sublist(0, 4),
+        );
+      },
+    );
   }
 
   @override
@@ -136,8 +174,7 @@ class _MapWidgetState extends State<MapWidget> {
                     ),
                   );
                 },
-                gestureRecognizers: Set()
-                  ..add(Factory<EagerGestureRecognizer>(() => EagerGestureRecognizer())),
+                gestureRecognizers: Set()..add(Factory<EagerGestureRecognizer>(() => EagerGestureRecognizer())),
               ),
             );
           }
