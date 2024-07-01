@@ -44,7 +44,7 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
         ),
         title: const Text(
           'Find Your Great Job',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.black, fontSize: 16),
         ),
         actions: const [
           CircleAvatar(
@@ -88,6 +88,7 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
                   TextField(
                     decoration: InputDecoration(
                       hintText: 'Search a Job',
+                      hintStyle: TextStyle(color: Colors.grey[400], fontSize: 12),
                       prefixIcon: const Icon(Icons.search),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -119,7 +120,7 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
                   const SizedBox(height: 16),
                   const Text(
                     'Most Popular',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
                   ),
                   const SizedBox(height: 16),
                   Container(
@@ -135,7 +136,7 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
                   const SizedBox(height: 16),
                   const Text(
                     'All Jobs',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
                   ),
                   const SizedBox(height: 16),
                   ListView.builder(
@@ -173,6 +174,7 @@ class FilterTile extends StatelessWidget {
         style: TextStyle(
           color: isSelected ? Colors.white : Colors.teal,
           fontWeight: FontWeight.bold,
+          fontSize: 12,
         ),
       ),
     );
