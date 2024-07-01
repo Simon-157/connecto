@@ -12,7 +12,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _passwordVisible = false;
-  bool _isLoading = false; // Track loading state
+  bool _isLoading = false; 
 
   final AuthService _authService = AuthService();
 

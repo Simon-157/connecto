@@ -33,26 +33,48 @@ Connecto is a mobile application designed to bridge the gap between Ghanaian stu
 connecto_app/
 ├── android/
 ├── ios/
-├── lib/
-│   ├── components/
-│   │   ├── buttons/
-│   │   ├── forms/
-│   │   ├── cards/
-│   │   └── ...
-│   ├── models/
-│   ├── providers/
-│   ├── screens/
-│   │   ├── authentication/
-│   │   ├── home/
-│   │   ├── profile/
-│   │   ├── chat/
-│   │   ├── settings/
-│   │   └── ...
-│   ├── services/
-│   ├── utils/
-│   ├── widgets/
-│   ├── main.dart
-│   └── routes.dart
+├
+└── 📁lib
+    └── 📁controllers
+        └── location_controller.dart
+    └── main.dart
+    └── 📁models
+        └── connection_model.dart
+        └── event_model.dart
+        └── job_feed_model.dart
+        └── media_model.dart
+        └── message_model.dart
+        └── notification_model.dart
+        └── user_model.dart
+    └── 📁screens
+        └── 📁auth
+            └── login_screen.dart
+            └── register_screen.dart
+        └── 📁explore
+            └── location_explore.dart
+        └── 📁jobs
+            └── job_detail_screen.dart
+            └── jobs_feed.dart
+        └── 📁onboarding
+            └── onboarding_screen.dart
+            └── splash_screen.dart
+    └── 📁services
+        └── auth_service.dart
+        └── location_service.dart
+    └── 📁shared
+        └── bottom_snake_bar.dart
+        └── bottom_wrapper.dart
+        └── page_navigation.dart
+    └── 📁utils
+        └── constants.dart
+        └── data.dart
+    └── 📁widgets
+        └── 📁explore
+            └── feeds_found_modal.dart
+            └── map_widget.dart
+        └── 📁jobs
+            └── jobcard.dart
+            └── jobtag.dart
 ├── test/
 │   ├── unit/
 │   ├── widget/
