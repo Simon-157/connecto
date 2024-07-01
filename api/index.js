@@ -57,13 +57,16 @@ app.post('/jobfeeds/batch', async (req, res) => {
 // Get all job feeds
 app.get('/jobfeeds', async (req, res) => {
   try {
+    console.log('Getting job feeds');
     const snapshot = await db.collection('jobfeeds').get();
     const jobFeeds = [];
     snapshot.forEach(doc => {
       jobFeeds.push(doc.data());
     });
+    
     res.status(200).json(jobFeeds);
   } catch (error) {
+    console.log('Error getting job feeds:', error);
     handleError(res, error);
   }
 });

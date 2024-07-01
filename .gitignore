@@ -71,6 +71,12 @@ android/app/*.keystore
 web/.dart_tool/
 web/build/
 
+# api
+api/node_modules/
+api/dist/
+api/.env
+api/firebaseService.json
+
 # Miscellaneous
 *.log
 *.tmp
