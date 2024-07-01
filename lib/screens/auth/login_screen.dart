@@ -1,3 +1,5 @@
+import 'package:connecto/services/auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -11,10 +13,57 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   bool _passwordVisible = false;
 
+  final AuthService _authService = AuthService(); 
+
   @override
   void initState() {
     super.initState();
     _passwordVisible = false;
+  }
+
+  // Function to handle email/password login
+  void _signInWithEmailAndPassword() async {
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
+
+    if (email.isNotEmpty && password.isNotEmpty) {
+      User? user = await _authService.signInWithEmailAndPassword(email, password);
+      if (user != null) {
+        Navigator.pushReplacementNamed(context, '/home');
+      } else {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Login Failed", style: TextStyle(color: Colors.red[300])),
+              content: Text("Invalid email or password. Please try again.", style: TextStyle(color: Colors.black54)),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text("OK"),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } else {
+      print("Please enter email and password.");
+    }
+  }
+
+  // Function to handle Google sign-in
+  void _signInWithGoogle() async {
+    User? user = await _authService.signInWithGoogle();
+    if (user != null) {
+      // Navigate to home screen or perform desired action upon successful login
+      Navigator.pushReplacementNamed(context, '/home');
+    } else {
+      // Handle Google sign-in failure (optional)
+      print("Google sign-in failed.");
+    }
   }
 
   @override
@@ -34,7 +83,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const SizedBox(height: kToolbarHeight), 
+            const SizedBox(height: kToolbarHeight),
             const Text(
               "Welcome,",
               style: TextStyle(
@@ -111,9 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 20.0),
                     ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/home');
-                      },
+                      onPressed: _signInWithEmailAndPassword,
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.black,
                         backgroundColor: Colors.white,
@@ -142,9 +189,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton.icon(
-                          onPressed: () {
-                            // TODO: Google login logic here
-                          },
+                          onPressed: _signInWithGoogle,
                           style: ElevatedButton.styleFrom(
                             foregroundColor: Colors.black,
                             backgroundColor: Colors.white,

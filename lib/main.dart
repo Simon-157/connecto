@@ -2,10 +2,13 @@ import 'package:connecto/screens/auth/login_screen.dart';
 import 'package:connecto/screens/auth/register_screen.dart';
 import 'package:connecto/screens/onboarding/splash_screen.dart';
 import 'package:connecto/shared/page_navigation.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 
-void main() {
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(ConnectoApp());
 }
 

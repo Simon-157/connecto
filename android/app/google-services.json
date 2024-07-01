@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "890338595308",
+    "project_id": "connecto-428002",
+    "storage_bucket": "connecto-428002.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:890338595308:android:23ed3fb1bbe88405ea70c9",
+        "android_client_info": {
+          "package_name": "com.example.connecto"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "890338595308-jfgg68kg3mdj9lc5ua8odkd0m7a92si5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.connecto",
+            "certificate_hash": "b28ec4160a9e68d2fe32f803b267dd99fcd327eb"
+          }
+        },
+        {
+          "client_id": "890338595308-9sbfsm8srmodrrh1vko3sfc0hekv3j22.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQsJWAar3YlM7A6g-EyrdZHYThAjvHIek"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "890338595308-9sbfsm8srmodrrh1vko3sfc0hekv3j22.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
