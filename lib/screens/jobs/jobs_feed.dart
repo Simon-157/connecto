@@ -1,4 +1,5 @@
 import 'package:connectivity/connectivity.dart';
+import 'package:connecto/services/auth_service.dart';
 import 'package:connecto/services/job_feed_service.dart';
 import 'package:flutter/material.dart';
 import 'package:connecto/screens/jobs/job_detail_screen.dart';
@@ -12,6 +13,8 @@ class JobFeedScreen extends StatefulWidget {
 class _JobFeedScreenState extends State<JobFeedScreen> {
   bool _isConnected = true;
   late Future<List<JobFeed>> _jobFeedsFuture;
+
+  final AuthService _authService = AuthService();
 
   @override
   void initState() {
@@ -48,12 +51,12 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
           'Find Your Great Job',
           style: TextStyle(color: Colors.black, fontSize: 16),
         ),
-        actions: const [
+        actions:  [
           CircleAvatar(
             backgroundImage:
-                NetworkImage('https://randomuser.me/api/portraits/men/1.jpg'),
+                NetworkImage(_authService.getCurrentUser()?.photoURL ?? 'https://via.placeholder.com/150'),
           ),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
         ],
       ),
       body: !_isConnected
@@ -61,23 +64,23 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Icon(
+                  const Icon(
                     Icons.error_outline,
                     color: Colors.red,
                     size: 60,
                   ),
-                  SizedBox(height: 16),
-                  Text(
+                  const SizedBox(height: 16),
+                  const Text(
                     "No Internet Connection",
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: _checkInternetConnection,
-                    child: Text("Retry"),
+                    child: const Text("Retry", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color.fromARGB(204, 104, 236, 163))),
                   ),
                 ],
               ),
@@ -88,9 +91,9 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return _buildLoadingPlaceholder();
                 } else if (snapshot.hasError) {
-                  return Center(child: Text('Failed to load job feeds'));
+                  return  const Center(child: Text('Failed to load job feeds', style: TextStyle(color: const Color.fromARGB(195, 244, 67, 54))));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text('No job feeds available'));
+                  return const Center(child: Text('No job feeds available', style: TextStyle(color: Color.fromARGB(195, 8, 19, 18))));
                 } else {
                   List<JobFeed> jobFeedDataList = snapshot.data!;
                   return SingleChildScrollView(
