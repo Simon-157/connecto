@@ -1,6 +1,7 @@
 import 'package:connecto/screens/auth/login_screen.dart';
 import 'package:connecto/screens/auth/register_screen.dart';
 import 'package:connecto/screens/onboarding/splash_screen.dart';
+import 'package:connecto/screens/sessions/create_schedule_sreen.dart';
 import 'package:connecto/shared/page_navigation.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +38,7 @@ class ConnectoApp extends StatelessWidget {
         '/home':(context) => PageNavigation(),
         '/login': (context) => LoginScreen(),
         '/register': (context) =>  RegisterScreen(),
+        '/create-session': (context) =>  CreateSessionScreen(),
       },
     );
   }

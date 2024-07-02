@@ -1,5 +1,6 @@
 import 'package:connecto/screens/explore/location_explore.dart';
 import 'package:connecto/screens/jobs/jobs_feed.dart';
+import 'package:connecto/screens/sessions/schedule_screen.dart';
 import 'package:connecto/shared/bottom_snake_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -39,7 +40,7 @@ class _PageNavigationState extends State<PageNavigation> {
           JobFeedScreen(),
           LocationExploreScreen(),
           Center(child: Text('Add New Page')),
-          Center(child: Text('Calendar Page')),
+          CalendarScreen(),
           Center(child: Text('Network Page')),
         ],
       ),
