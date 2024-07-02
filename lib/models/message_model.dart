@@ -1,36 +1,44 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Message {
-  String messageId;
+  String id; 
   String senderId;
   String receiverId;
   String content;
-  DateTime timestamp;
+  Timestamp timestamp;
+  DocumentReference? media; 
 
   Message({
-    required this.messageId,
+    required this.id,
     required this.senderId,
     required this.receiverId,
     required this.content,
     required this.timestamp,
+    this.media,
   });
 
   factory Message.fromJson(Map<String, dynamic> json) {
     return Message(
-      messageId: json['message_id'],
+      id: json['id'],
       senderId: json['sender_id'],
       receiverId: json['receiver_id'],
       content: json['content'],
-      timestamp: DateTime.parse(json['timestamp']),
+      timestamp: json['timestamp'],
+      media: json['media'],
     );
+  }
+
+  factory Message.fromDocument(DocumentSnapshot doc) {
+    return Message.fromJson(doc.data()! as Map<String, dynamic>)..id = doc.id;
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'message_id': messageId,
       'sender_id': senderId,
       'receiver_id': receiverId,
       'content': content,
-      'timestamp': timestamp.toIso8601String(),
+      'timestamp': timestamp,
+      'media': media,
     };
   }
 }
-

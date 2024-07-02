@@ -1,4 +1,6 @@
 import 'package:connecto/screens/auth/login_screen.dart';
+import 'package:connecto/services/auth_service.dart';
+import 'package:connecto/shared/page_navigation.dart';
 import 'package:flutter/material.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -10,6 +12,7 @@ class OnboardingScreen extends StatefulWidget {
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
   late PageController _pageController;
+  AuthService _authService = AuthService();
   int currentIndex = 0;
 
   @override
@@ -46,10 +49,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void onGetStarted() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => LoginScreen()),
-    );
+    if (_authService.getCurrentUser() != null) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => PageNavigation()),
+      );
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+      );
+    }
   }
 
   @override
@@ -101,18 +111,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ? ElevatedButton(
                       onPressed: onNext,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.cyan, 
+                        backgroundColor: Colors.lightBlueAccent, 
                         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                       ),
-                      child: const Text('Next'),
+                      child: const Text('Next', style: TextStyle(color: Colors.white),),
                     )
                   : ElevatedButton(
                       onPressed: onGetStarted,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.cyan, 
+                        backgroundColor: Colors.lightBlueAccent, 
                         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                       ),
-                      child: const Text('Get Started'),
+                      child: Text(_authService.getCurrentUser()!=null ? 'Continue' : 'Get Started', style: TextStyle(color: Colors.white),),
                     ),
             ),
           ],
@@ -126,8 +136,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
+    
+        Text(
+          'Welcome ${_authService.getCurrentUser()!=null ? 'back ${_authService.getCurrentUser()?.displayName }' : 'New User'}',
+          style: const TextStyle(
+            fontSize: 18,
+            color: Colors.greenAccent,
+            fontWeight: FontWeight.bold
+          ),
+        ),
+      
       Image.asset(image, height: 300),
       const SizedBox(height: 20),
+
       Text(
         title,
         textAlign: TextAlign.center,

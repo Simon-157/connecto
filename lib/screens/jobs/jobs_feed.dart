@@ -4,6 +4,7 @@ import 'package:connecto/services/job_feed_service.dart';
 import 'package:flutter/material.dart';
 import 'package:connecto/screens/jobs/job_detail_screen.dart';
 import 'package:connecto/models/job_feed_model.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class JobFeedScreen extends StatefulWidget {
   @override
@@ -44,7 +45,7 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.menu, color: Colors.black),
+          icon: SvgPicture.asset('assets/icons/logo.svg'),
           onPressed: () {},
         ),
         title: const Text(

@@ -67,6 +67,13 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+
+  void _signInWithFacebook() {
+      _showErrorDialog("Login Failed", "Facebook sign-in is not supported yet., Try Google or Email instead.");
+    }
+
+
+
   // Function to show error dialog
   void _showErrorDialog(String title, String message) {
     showDialog(
@@ -236,7 +243,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             const SizedBox(width: 10.0),
                             ElevatedButton.icon(
                               onPressed: () {
-                                // TODO: Facebook login logic here
+                                _signInWithFacebook();
                               },
                               style: ElevatedButton.styleFrom(
                                 foregroundColor: Colors.black,
@@ -299,4 +306,5 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
+
 }

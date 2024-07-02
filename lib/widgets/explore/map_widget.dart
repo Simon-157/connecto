@@ -154,7 +154,7 @@ class _MapWidgetState extends State<MapWidget> {
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
               child: GoogleMap(
-                initialCameraPosition: CameraPosition(
+                initialCameraPosition: const CameraPosition(
                   target: _kMapCenter,
                   zoom: 13,
                 ),

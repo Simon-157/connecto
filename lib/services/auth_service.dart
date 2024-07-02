@@ -13,9 +13,11 @@ class AuthService {
   }
 
   // Sign in with email & password
-  Future<User?> signInWithEmailAndPassword(String email, String password) async {
+  Future<User?> signInWithEmailAndPassword(
+      String email, String password) async {
     try {
-      UserCredential result = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      UserCredential result = await _auth.signInWithEmailAndPassword(
+          email: email, password: password);
       User? user = result.user;
       return user;
     } catch (error) {
@@ -24,16 +26,25 @@ class AuthService {
     }
   }
 
-  // Register with email & password
-  Future<User?> registerWithEmailAndPassword(String email, String password, String name) async {
+  Future<User?> registerWithEmailAndPassword(
+      String email, String password, String name) async {
     try {
-      UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
+          email: email, password: password);
       User? user = result.user;
 
-      // Create a new document for the user with the uid
       await _firestore.collection('users').doc(user?.uid).set({
+        'id': user?.uid,
+        'user_id': '',
         'name': name,
         'email': email,
+        'password': password,
+        'profile_picture': null,
+        'bio': null,
+        'skills': null,
+        'location': null,
+        'role': '',
+        'address': '',
         'createdAt': FieldValue.serverTimestamp(),
       });
 
@@ -44,16 +55,15 @@ class AuthService {
     }
   }
 
-  // Sign in with Google
   Future<User?> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
-          
         return null;
       }
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
@@ -62,13 +72,21 @@ class AuthService {
       UserCredential result = await _auth.signInWithCredential(credential);
       User? user = result.user;
 
-      // Check if user document already exists
-      DocumentSnapshot userDoc = await _firestore.collection('users').doc(user?.uid).get();
+      DocumentSnapshot userDoc =
+          await _firestore.collection('users').doc(user?.uid).get();
       if (!userDoc.exists) {
-        // Create a new document for the user with the uid
         await _firestore.collection('users').doc(user?.uid).set({
-          'name': user?.displayName,
-          'email': user?.email,
+          'id': user?.uid,
+          'user_id': '',
+          'name': user?.displayName ?? '',
+          'email': user?.email ?? '',
+          'password': '',
+          'profile_picture': user?.photoURL ?? null,
+          'bio': null,
+          'skills': null,
+          'location': null,
+          'role': '',
+          'address': '',
           'createdAt': FieldValue.serverTimestamp(),
         });
       }
@@ -138,4 +156,17 @@ class AuthService {
       return Future.error("Error fetching user data");
     }
   }
+
+
+  // get all users
+  Future<List<DocumentSnapshot>> getAllUsers() async {
+    try {
+      QuerySnapshot querySnapshot = await _firestore.collection('users').get();
+      return querySnapshot.docs;
+    } catch (error) {
+      print(error.toString());
+      return [];
+    }
+  }
+  
 }

@@ -1,13 +1,19 @@
 const express = require('express');
 const admin = require('firebase-admin');
 const bodyParser = require('body-parser');
+const config = require('./config');
 
-const serviceAccount = require('./firebaseService.json');
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-//   databaseURL: 'https://project-id.firebaseio.com'
-});
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert({
+      projectId: config.projectId,
+      clientEmail: config.clientEmail,
+      privateKey: config.privateKey.replace(/\\n/g, '\n'),
+    }),
+    databaseURL: `https://${config.projectId}.firebaseio.com`
+  });
+}
 
 const db = admin.firestore();
 const app = express();

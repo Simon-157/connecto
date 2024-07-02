@@ -1,3 +1,4 @@
+import 'package:connecto/screens/chat/chat_screen.dart';
 import 'package:connecto/screens/explore/location_explore.dart';
 import 'package:connecto/screens/jobs/jobs_feed.dart';
 import 'package:connecto/screens/sessions/schedule_screen.dart';
@@ -41,7 +42,7 @@ class _PageNavigationState extends State<PageNavigation> {
           LocationExploreScreen(),
           Center(child: Text('Add New Page')),
           CalendarScreen(),
-          Center(child: Text('Network Page')),
+          ChatScreen(),
         ],
       ),
       bottomNavigationBar: CustomBottomNavBar(
