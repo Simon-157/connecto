@@ -37,15 +37,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
           _loading = true; // Start loading
         });
 
-        User? user = await _authService.registerWithEmailAndPassword(email, password, 'anonymoususer');
+        Object? user = await _authService.registerWithEmailAndPassword(email, password, 'anonymoususer');
 
         setState(() {
           _loading = false; // Stop loading
         });
 
-        if (user != null) {
+        if (user != null && user is User) {
           Navigator.pushReplacementNamed(context, '/home');
-        } else {
+        } else if (user is String) {
+          _showErrorDialog("Registration Failed", "Failed to register. Please try again. Error: $user");
+        }
+        else if (user == null) {
           _showErrorDialog("Registration Failed", "Failed to register. Please try again.");
         }
       } else {

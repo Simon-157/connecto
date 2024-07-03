@@ -56,7 +56,7 @@ class _MessageInputState extends State<MessageInput> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.grey[300],
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.5),
@@ -78,6 +78,7 @@ class _MessageInputState extends State<MessageInput> {
           ),
           Expanded(
             child: TextField(
+              style: TextStyle(color: Colors.black, fontSize: 16.0),
               controller: _controller,
               decoration: InputDecoration(
                 hintText: 'Type a message...',

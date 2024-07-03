@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connecto/models/user_model.dart';
+
 class Connection {
   String connectionId;
   String userId;
@@ -20,6 +23,16 @@ class Connection {
     );
   }
 
+
+factory Connection.fromSnapshot(DocumentSnapshot snapshot) {
+    return Connection(
+      connectionId: snapshot.id,
+      userId: snapshot['user_id'] ?? '',
+      connectedUserId: snapshot['connected_user_id'] ?? '',
+      status: snapshot['status'] ?? '',
+    );
+  }
+  
   Map<String, dynamic> toJson() {
     return {
       'connection_id': connectionId,
@@ -28,4 +41,24 @@ class Connection {
       'status': status,
     };
   }
+
+  static Connection fromDocument(QueryDocumentSnapshot<Object?> doc) {
+
+    return Connection.fromJson(doc.data()! as Map<String, dynamic>)..connectionId = doc.id;
+  }
 }
+
+
+
+class ConnectionWithUser {
+  final Connection connection;
+  final UserModel user;
+
+  ConnectionWithUser({
+    required this.connection,
+    required this.user,
+  });
+}
+
+
+ 

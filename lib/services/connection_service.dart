@@ -5,92 +5,155 @@ import 'package:connecto/models/user_model.dart';
 class ConnectionService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Create Connection
-  Future<void> createConnection(String userId, String connectedUserId, String status) async {
-    try {
-      DocumentReference docRef = _firestore.collection('connections').doc();
-      String connectionId = docRef.id;
+  // Collection reference
+  CollectionReference get _connections => _firestore.collection('connections');
+  CollectionReference get _users => _firestore.collection('users');
 
+// Create Connection
+  Future<void> _createConnection(String userId, String connectedUserId) async {
+    DocumentReference docRef = _connections.doc();
+    String connectionId = docRef.id;
+
+    try {
       await docRef.set({
-        'connection_id': connectionId,
+        'connection_d': connectionId,
         'user_id': userId,
         'connected_user_id': connectedUserId,
-        'status': status,
+        'status': 'pending',
       });
+
+      print('Connection created successfully');
     } catch (error) {
       print(error.toString());
       throw Exception('Failed to create connection');
     }
   }
 
-  // Read Connection
-  Future<Connection?> getConnection(String connectionId) async {
-    try {
-      DocumentSnapshot doc = await _firestore.collection('connections').doc(connectionId).get();
-      if (doc.exists) {
-        return Connection.fromJson(doc.data()! as Map<String, dynamic>);
+  // Send a connection request
+  Future<void> sendConnectionRequest(
+      String userId, String connectedUserId) async {
+    final existingConnection = await _getConnection(userId, connectedUserId);
+    final reverseConnection = await _getConnection(connectedUserId, userId);
+    print(reverseConnection);
+    if (existingConnection != null || reverseConnection != null) {
+      throw Exception("Connection request already exists in some state.");
+    }
+
+    // Create connection
+    if (existingConnection == null && reverseConnection == null) {
+      await _createConnection(userId, connectedUserId);
+    }
+  }
+
+  // Accept a connection request
+  Future<void> acceptConnectionRequest(String connectionId) async {
+    await _connections.doc(connectionId).update({'status': 'accepted'});
+  }
+
+  // Decline a connection request
+  Future<void> declineConnectionRequest(String connectionId) async {
+    await _connections.doc(connectionId).update({'status': 'declined'});
+  }
+
+  // Check if a connection request exists in any state
+  Future<Connection?> _getConnection(
+      String userId, String connectedUserId) async {
+    final snapshot = await _connections
+        .where('user_id', isEqualTo: userId)
+        .where('connected_user_id', isEqualTo: connectedUserId)
+        .get();
+
+    if (snapshot.docs.isEmpty) return null;
+
+    return Connection.fromSnapshot(snapshot.docs.first);
+  }
+
+  // Fetch pending connection requests for a user
+  Future<List<Connection>> getPendingRequests(String userId) async {
+    final snapshot = await _connections
+        .where('connected_user_id', isEqualTo: userId)
+        .where('status', isEqualTo: 'pending')
+        .get();
+
+    return snapshot.docs.map((doc) => Connection.fromSnapshot(doc)).toList();
+  }
+
+  // Fetch accepted connections for a user
+  Future<List<Connection>> getAcceptedConnections(String userId) async {
+    final snapshot = await _connections
+        .where('user_id', isEqualTo: userId)
+        .where('status', isEqualTo: 'accepted')
+        .get();
+
+    final reverseSnapshot = await _connections
+        .where('connected_user_id', isEqualTo: userId)
+        .where('status', isEqualTo: 'accepted')
+        .get();
+
+    final connections =
+        snapshot.docs.map((doc) => Connection.fromSnapshot(doc)).toList();
+    final reverseConnections = reverseSnapshot.docs
+        .map((doc) => Connection.fromSnapshot(doc))
+        .toList();
+
+    // Use a set to remove duplicate connectionIds
+    final connectionSet = <String>{};
+    final uniqueConnections = <Connection>[];
+
+    for (var connection in [...connections, ...reverseConnections]) {
+      if (connectionSet.add(connection.connectionId)) {
+        uniqueConnections.add(connection);
       }
-      return null;
-    } catch (error) {
-      print(error.toString());
-      throw Exception('Failed to get connection');
     }
+
+    return uniqueConnections;
   }
 
-  // Update Connection
-  Future<void> updateConnection(String connectionId, String userId, String connectedUserId, String status) async {
-    try {
-      await _firestore.collection('connections').doc(connectionId).update({
-        'user_id': userId,
-        'connected_user_id': connectedUserId,
-        'status': status,
-      });
-    } catch (error) {
-      print(error.toString());
-      throw Exception('Failed to update connection');
-    }
+  // // Fetch suggestions for connections (users with no existing connection)
+  // Future<List<UserModel>> getSuggestions(String currentUserId) async {
+  //   final existingConnections = await getAcceptedConnections(currentUserId);
+  //   final suggestionsQuery =
+  //       await _users.where('userId', isNotEqualTo: currentUserId).get();
+
+  //   final suggestedUsers = suggestionsQuery.docs
+  //       .map((doc) => UserModel.fromDocument(doc))
+  //       .where((user) => !existingConnections.any((connection) =>
+  //           connection.userId == user.userId ||
+  //           connection.connectedUserId == user.userId))
+  //       .toList();
+
+  //   return suggestedUsers;
+  // }
+
+ 
+   Future<List<UserModel>> getSuggestions(String userId) async {
+    // Fetch all users
+    final allUsersSnapshot = await _users.get();
+    final allUsers = allUsersSnapshot.docs.map((doc) => UserModel.fromSnapshot(doc)).toList();
+
+    // Fetch all connections for the user
+    final userConnectionsSnapshot = await _connections
+        .where('user_id', isEqualTo: userId)
+        .get();
+    final connectedUserIds = userConnectionsSnapshot.docs.map((doc) => doc['connected_user_id'] as String).toSet();
+
+    // Fetch all reverse connections for the user
+    final reverseConnectionsSnapshot = await _connections
+        .where('connected_user_id', isEqualTo: userId)
+        .get();
+    final reverseConnectedUserIds = reverseConnectionsSnapshot.docs.map((doc) => doc['user_id'] as String).toSet();
+
+    // Combine both sets of connected user ids
+    final allConnectedUserIds = connectedUserIds.union(reverseConnectedUserIds);
+
+    // Filter out connected users and the user themselves from the list of all users
+    final suggestedUsers = allUsers.where((user) => !allConnectedUserIds.contains(user.userId) && user.userId != userId).toList();
+
+    return suggestedUsers;
   }
 
-  // Delete Connection
-  Future<void> deleteConnection(String connectionId) async {
-    try {
-      await _firestore.collection('connections').doc(connectionId).delete();
-    } catch (error) {
-      print(error.toString());
-      throw Exception('Failed to delete connection');
-    }
+  Future<UserModel> getUser(String userId) async {
+    final snapshot = await _firestore.collection('users').doc(userId).get();
+    return UserModel.fromSnapshot(snapshot);
   }
-
-  // Get Connected Users with User Info for a Given User
-  Future<List<ConnectionWithUser>> getConnectedUsersWithInfo(String userId) async {
-    try {
-      QuerySnapshot querySnapshot = await _firestore
-          .collection('connections')
-          .where('user_id', isEqualTo: userId)
-          .where('status', isEqualTo: 'connected')
-          .get();
-
-      List<ConnectionWithUser> connectedUsers = [];
-      for (DocumentSnapshot doc in querySnapshot.docs) {
-        Connection connection = Connection.fromJson(doc.data() as Map<String, dynamic>);
-        DocumentSnapshot userDoc = await _firestore.collection('users').doc(connection.connectedUserId).get();
-        if (userDoc.exists) {
-          User connectedUser = User.fromDocument(userDoc);
-          connectedUsers.add(ConnectionWithUser(connection: connection, user: connectedUser));
-        }
-      }
-
-      return connectedUsers;
-    } catch (error) {
-      print(error.toString());
-      throw Exception('Failed to get connected users with info');
-    }
-  }
-}
-
-class ConnectionWithUser {
-  final Connection connection;
-  final User user;
-
-  ConnectionWithUser({required this.connection, required this.user});
 }

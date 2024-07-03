@@ -1,7 +1,6 @@
-import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class User {
+class UserModel {
   String id;
   String userId;
   String name;
@@ -9,12 +8,12 @@ class User {
   String password;
   String? profilePicture;
   String? bio;
-  Map<String, dynamic>? skills;
-  dynamic location; 
+ dynamic skills;
+  dynamic location;
   String role;
-  String  address;
+  String address;
 
-  User({
+  UserModel({
     required this.id,
     required this.userId,
     required this.name,
@@ -24,12 +23,12 @@ class User {
     this.bio,
     this.skills,
     this.location,
-    required this.role, 
-    required  this.address,
+    required this.role,
+    required this.address,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
       id: json['id'],
       userId: json['user_id'],
       name: json['name'],
@@ -37,32 +36,68 @@ class User {
       password: json['password'],
       profilePicture: json['profile_picture'],
       bio: json['bio'],
-      skills: jsonDecode(json['skills']),
+      skills: json['skills'],
       location: json['location'],
-      role: json['role'], 
+      role: json['role'],
       address: json['address'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-       'id': id,
+      'id': id,
       'user_id': userId,
       'name': name,
       'email': email,
       'password': password,
       'profile_picture': profilePicture,
       'bio': bio,
-      'skills': jsonEncode(skills),
+      'skills': skills,
       'location': location,
       'role': role,
       'address': address,
     };
   }
 
-
-  factory User.fromDocument(DocumentSnapshot doc) {
-    return User.fromJson(doc.data()! as Map<String, dynamic>)..id = doc.id;
+  factory UserModel.fromDocument(DocumentSnapshot doc) {
+    Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
+    if (data == null) {
+      throw Exception("Document data was null");
+    }
+    return UserModel(
+      id: doc.id,
+      userId: data['user_id'] ?? '', 
+      name: data['name'] ?? '',
+      email: data['email'] ?? '',
+      password: data['password'] ?? '',
+      profilePicture: data['profile_picture'],
+      bio: data['bio'],
+      skills: data['skills'],
+      location: data['location'],
+      role: data['role'] ?? '',
+      address: data['address'] ?? '',
+    );
   }
 
+
+    factory UserModel.fromSnapshot(DocumentSnapshot doc) {
+    Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
+    if (data == null) {
+      throw Exception("Document data was null");
+    }
+    return UserModel(
+      id: doc.id,
+      userId: data['user_id'] ?? '', 
+      name: data['name'] ?? '',
+      email: data['email'] ?? '',
+      password: data['password'] ?? '',
+      profilePicture: data['profile_picture'],
+      bio: data['bio'],
+      skills: data['skills'],
+      location: data['location'],
+      role: data['role'] ?? '',
+      address: data['address'] ?? '',
+    );
+  }
 }
+

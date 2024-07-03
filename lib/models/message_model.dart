@@ -6,7 +6,7 @@ class Message {
   String receiverId;
   String content;
   Timestamp timestamp;
-  DocumentReference? media; 
+  dynamic media; 
 
   Message({
     required this.id,
@@ -19,17 +19,22 @@ class Message {
 
   factory Message.fromJson(Map<String, dynamic> json) {
     return Message(
-      id: json['id'],
-      senderId: json['sender_id'],
-      receiverId: json['receiver_id'],
-      content: json['content'],
-      timestamp: json['timestamp'],
+      id: json['id'] ?? '',
+      senderId: json['sender_id'] ?? '',
+      receiverId: json['receiver_id'] ?? '',
+      content: json['content'] ?? '',
+      timestamp: json['timestamp'] ?? Timestamp.now(),
       media: json['media'],
     );
   }
 
   factory Message.fromDocument(DocumentSnapshot doc) {
-    return Message.fromJson(doc.data()! as Map<String, dynamic>)..id = doc.id;
+    Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
+    if (data == null) {
+      throw Exception("Document data was null");
+    }
+    return Message.fromJson(data);
+
   }
 
   Map<String, dynamic> toJson() {

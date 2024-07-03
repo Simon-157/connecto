@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class FoundFeedModal extends StatelessWidget {
   final List<JobFeed> jobFeeds;
-  final List<User> mentors;
+  final List<UserModel> mentors;
 
   FoundFeedModal({
     required this.jobFeeds,
@@ -105,7 +105,7 @@ class FoundFeedModal extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               itemCount: mentors.length,
               itemBuilder: (context, index) {
-                User mentor = mentors[index];
+                UserModel mentor = mentors[index];
                 return _buildMentorCard(mentor);
               },
             ),
@@ -197,7 +197,7 @@ class FoundFeedModal extends StatelessWidget {
       ),
     );
   }
-Widget _buildMentorCard(User mentor) {
+Widget _buildMentorCard(UserModel mentor) {
   return Container(
     width: 182,
     margin: const EdgeInsets.symmetric(horizontal: 10),

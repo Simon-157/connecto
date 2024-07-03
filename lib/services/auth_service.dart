@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connecto/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:http/http.dart' as http;
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -26,8 +29,9 @@ class AuthService {
     }
   }
 
-  Future<User?> registerWithEmailAndPassword(
-      String email, String password, String name) async {
+
+  Future<Object?> registerWithEmailAndPassword(
+    String email, String password, String name) async {
     try {
       UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
@@ -35,25 +39,28 @@ class AuthService {
 
       await _firestore.collection('users').doc(user?.uid).set({
         'id': user?.uid,
-        'user_id': '',
+        'user_id': user?.uid,
         'name': name,
         'email': email,
         'password': password,
-        'profile_picture': null,
-        'bio': null,
-        'skills': null,
-        'location': null,
-        'role': '',
-        'address': '',
+        'profile_picture': 'https://avatar.iran.liara.run/username?username=[${name}+${email}]',
+        'bio': '',
+        'skills': {},
+        'location': {'latitude': 5.5608, 'longitude': -0.2057},
+        'role': 'graduate',
+        'address': 'Accra, Ghana',
         'createdAt': FieldValue.serverTimestamp(),
       });
 
       return user;
     } catch (error) {
       print(error.toString());
-      return null;
+      return error.toString() == '[firebase_auth/email-already-in-use]'
+          ? 'Email already in use'
+          : null;
     }
   }
+
 
   Future<User?> signInWithGoogle() async {
     try {
@@ -82,11 +89,11 @@ class AuthService {
           'email': user?.email ?? '',
           'password': '',
           'profile_picture': user?.photoURL ?? null,
-          'bio': null,
-          'skills': null,
-          'location': null,
-          'role': '',
-          'address': '',
+          'bio': '',
+          'skills': {},
+          'location': {'latitude': 5.5608, 'longitude': -0.2057},
+          'role': 'graduate',
+          'address': 'Accra, Ghana',
           'createdAt': FieldValue.serverTimestamp(),
         });
       }
@@ -99,10 +106,11 @@ class AuthService {
   }
 
   // Sign out
-  Future<void> signOut() async {
+  Future<void> signOut( BuildContext context) async {
     try {
       await _auth.signOut();
       await _googleSignIn.signOut();
+      Navigator.of(context).pushReplacementNamed('/login');
     } catch (error) {
       print(error.toString());
       return null;
@@ -148,25 +156,41 @@ class AuthService {
   }
 
   // Fetch user data from Firestore
-  Future<DocumentSnapshot> getUserData(String uid) async {
-    try {
-      return await _firestore.collection('users').doc(uid).get();
-    } catch (error) {
-      print(error.toString());
-      return Future.error("Error fetching user data");
-    }
+Future<UserModel> getUserData() async {
+  try {
+    DocumentSnapshot snapshot = await _firestore.collection('users').doc(getCurrentUser()?.uid).get();
+    return UserModel.fromDocument(snapshot);
+  } catch (error) {
+    print(error.toString());
+    throw Exception("Error fetching user data from Firestore");
   }
+}
 
 
   // get all users
-  Future<List<DocumentSnapshot>> getAllUsers() async {
+  Future<List<UserModel>> getAllUsers() async {
     try {
       QuerySnapshot querySnapshot = await _firestore.collection('users').get();
-      return querySnapshot.docs;
+      return querySnapshot.docs.map((doc) => UserModel.fromDocument(doc)).toList();
     } catch (error) {
       print(error.toString());
       return [];
     }
   }
-  
+
 }
+
+
+
+Function generateRandomAvatar = (String name) async {
+  final response = await http.get(
+    Uri.parse('https://ui-avatars.com/api/?name=$name&background=random'),
+  );
+
+  if (response.statusCode == 200) {
+    return response.body;
+  } else {
+    throw Exception('Failed to load avatar');
+  }
+};
+

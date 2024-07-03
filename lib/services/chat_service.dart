@@ -1,9 +1,9 @@
 import 'dart:io';
-import 'package:async/async.dart' show StreamGroup;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connecto/models/message_model.dart';
 import 'package:connecto/models/user_model.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
 
 class ChatService {
@@ -18,7 +18,7 @@ class ChatService {
   factory ChatService() => _instance;
   ChatService._internal();
 
-  // Send a message with optional media
+  //  message with optional media
   Future<void> sendMessage({
     required String senderId,
     required String receiverId,
@@ -29,11 +29,9 @@ class ChatService {
     DocumentReference? mediaRef;
 
     if (filePath != null && fileType != null) {
-      // Upload media to Firebase Storage
       mediaRef = await _uploadMedia(senderId, filePath, fileType);
     }
 
-    // Create message document
     await _firestore.collection(messagesCollection).add({
       'sender_id': senderId,
       'receiver_id': receiverId,
@@ -43,16 +41,13 @@ class ChatService {
     });
   }
 
-  // Upload media and return DocumentReference
   Future<DocumentReference> _uploadMedia(String userId, String filePath, String fileType) async {
     String fileId = Uuid().v4();
     String storagePath = '$userId/$fileId';
 
-    // Upload file to Firebase Storage
     TaskSnapshot uploadTask = await _storage.ref(storagePath).putFile(File(filePath));
     String downloadUrl = await uploadTask.ref.getDownloadURL();
 
-    // Create media document in Firestore
     DocumentReference mediaRef = await _firestore.collection(mediaCollection).add({
       'user_id': userId,
       'file_path': downloadUrl,
@@ -63,56 +58,55 @@ class ChatService {
     return mediaRef;
   }
 
+
+
+
 Stream<List<Message>> getMessages(String userId1, String userId2) {
+  final _firestore = FirebaseFirestore.instance;
+
   // Query messages sent from userId1 to userId2
-  Stream<Iterable<Message>> stream1 = _firestore
+  Stream<List<Message>> stream1 = _firestore
       .collection('messages')
       .where('sender_id', isEqualTo: userId1)
       .where('receiver_id', isEqualTo: userId2)
       .orderBy('timestamp')
       .snapshots()
-      .asyncMap((snapshot) => _messageListFromSnapshot(snapshot));
+      .map((snapshot) => _messageListFromSnapshot(snapshot));
 
   // Query messages sent from userId2 to userId1
-  Stream<Iterable<Message>> stream2 = _firestore
+  Stream<List<Message>> stream2 = _firestore
       .collection('messages')
       .where('sender_id', isEqualTo: userId2)
       .where('receiver_id', isEqualTo: userId1)
       .orderBy('timestamp')
       .snapshots()
-      .asyncMap((snapshot) => _messageListFromSnapshot(snapshot));
+      .map((snapshot) => _messageListFromSnapshot(snapshot));
 
-  // Merge both streams using StreamGroup
-  return StreamGroup.merge<Iterable<Message>>([stream1, stream2]).map((messages) {
-    // Combine and sort messages by timestamp
-    List<Message> mergedMessages = [];
-    messages.forEach((messageIterable) {
-      mergedMessages.addAll(messageIterable as Iterable<Message>);
-    });
+  // Merge both streams and sort the combined list by timestamp
+  return Rx.combineLatest2(stream1, stream2, (List<Message> messages1, List<Message> messages2) {
+    List<Message> mergedMessages = [...messages1, ...messages2];
     mergedMessages.sort((a, b) => a.timestamp.compareTo(b.timestamp));
     return mergedMessages;
   });
 }
 
-
-
-Iterable<Message> _messageListFromSnapshot(QuerySnapshot snapshot) sync* {
-  yield* snapshot.docs.map((doc) => Message.fromDocument(doc));
+List<Message> _messageListFromSnapshot(QuerySnapshot snapshot) {
+  return snapshot.docs.map((doc) => Message.fromDocument(doc)).toList();
 }
 
 
   // Get user details
-  Future<User?> getUser(String userId) async {
+  Future<UserModel?> getUser(String userId) async {
     DocumentSnapshot doc = await _firestore.collection(usersCollection).doc(userId).get();
     if (doc.exists) {
-      return User.fromDocument(doc);
+      return UserModel.fromDocument(doc);
     } else {
       return null;
     }
   }
 
   // Update user details
-  Future<void> updateUser(User user) async {
+  Future<void> updateUser(UserModel user) async {
     await _firestore.collection(usersCollection).doc(user.id).update(user.toJson());
   }
 

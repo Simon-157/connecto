@@ -1,6 +1,6 @@
-import 'package:connecto/screens/chat/chat_screen.dart';
 import 'package:connecto/screens/explore/location_explore.dart';
 import 'package:connecto/screens/jobs/jobs_feed.dart';
+import 'package:connecto/screens/network/network_screen.dart';
 import 'package:connecto/screens/sessions/schedule_screen.dart';
 import 'package:connecto/shared/bottom_snake_bar.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +27,8 @@ class _PageNavigationState extends State<PageNavigation> {
     super.dispose();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,7 +44,8 @@ class _PageNavigationState extends State<PageNavigation> {
           LocationExploreScreen(),
           Center(child: Text('Add New Page')),
           CalendarScreen(),
-          ChatScreen(),
+          ConnectionScreen(),
+          // ChatScreen(),
         ],
       ),
       bottomNavigationBar: CustomBottomNavBar(

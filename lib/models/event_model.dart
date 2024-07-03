@@ -57,7 +57,7 @@ class Event {
     // Determine if creator is a User or Company based on JSON structure
     dynamic creatorObject;
     if (json.containsKey('user_id')) {
-      creatorObject = User.fromJson(json);
+      creatorObject = UserModel.fromJson(json);
     } else if (json.containsKey('company_id')) {
       creatorObject = Company.fromJson(json);
     }

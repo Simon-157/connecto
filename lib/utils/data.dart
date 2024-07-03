@@ -20,8 +20,8 @@ String getRandomAvatar() {
 
 
 // Dummy data for users
-List<User> userDataList = [
-  User(
+List<UserModel> userDataList = [
+  UserModel(
     
     userId: '12345',
     name: 'Kwame Mensah',
@@ -34,7 +34,7 @@ List<User> userDataList = [
     address: 'Accra, Ghana',
     role: 'mentor', id: '',
   ),
-  User(
+  UserModel(
     userId: '67890',
     name: 'Ama Osei',
     email: 'ama.osei@example.com',
@@ -46,7 +46,7 @@ List<User> userDataList = [
     address: 'Kumasi, Ghana',
     role: 'mentee', id: '',
   ),
-  User(
+  UserModel(
     userId: '11223',
     name: 'Kojo Asante',
     email: 'kojo.asante@example.com',
@@ -58,7 +58,7 @@ List<User> userDataList = [
     address: 'Tema, Ghana',
     role: 'mentor', id: '',
   ),
-  User(
+  UserModel(
     userId: '44556',
     name: 'Yaa Nyarko',
     email: 'yaa.nyarko@example.com',
@@ -70,7 +70,7 @@ List<User> userDataList = [
     address: 'Cape Coast, Ghana',
     role: 'mentee', id: '',
   ),
-  User(
+  UserModel(
     userId: '77889',
     name: 'Kofi Boateng',
     email: 'kofi.boateng@example.com',
@@ -82,7 +82,7 @@ List<User> userDataList = [
     address: 'Takoradi, Ghana',
     role: 'mentor', id: '',
   ),
-  User(
+  UserModel(
     userId: '99112',
     name: 'Akua Appiah',
     email: 'akua.appiah@example.com',
@@ -157,7 +157,7 @@ List<Event> eventDataList = [
     startTime: DateTime(2024, 7, 10, 14, 0), // July 10, 2024, 2:00 PM
     endTime: DateTime(2024, 7, 10, 16, 0),   // July 10, 2024, 4:00 PM
     eventImage: 'https://example.com/event1.jpg',
-    creator: User(
+    creator: UserModel(
       userId: '12345',
       name: 'Kwame Mensah',
       email: 'kwame.mensah@example.com',
@@ -178,7 +178,7 @@ List<Event> eventDataList = [
     startTime: DateTime(2024, 7, 15, 10, 0), // July 15, 2024, 10:00 AM
     endTime: DateTime(2024, 7, 15, 12, 0),   // July 15, 2024, 12:00 PM
     eventImage: 'https://example.com/event2.jpg',
-    creator: User(
+    creator: UserModel(
       userId: '11223',
       name: 'Kojo Asante',
       email: 'kojo.asante@example.com',
@@ -199,7 +199,7 @@ List<Event> eventDataList = [
     startTime: DateTime(2024, 7, 20, 18, 0), // July 20, 2024, 6:00 PM
     endTime: DateTime(2024, 7, 20, 20, 0),   // July 20, 2024, 8:00 PM
     eventImage: 'https://example.com/event3.jpg',
-    creator: User(
+    creator: UserModel(
       userId: '77889',
       name: 'Kofi Boateng',
       email: 'kofi.boateng@example.com',
@@ -220,7 +220,7 @@ List<Event> eventDataList = [
     startTime: DateTime(2024, 7, 25, 13, 0), // July 25, 2024, 1:00 PM
     endTime: DateTime(2024, 7, 25, 15, 0),   // July 25, 2024, 3:00 PM
     eventImage: 'https://example.com/event4.jpg',
-    creator: User(
+    creator: UserModel(
       userId: '44556',
       name: 'Yaa Nyarko',
       email: 'yaa.nyarko@example.com',
@@ -241,7 +241,7 @@ List<Event> eventDataList = [
     startTime: DateTime(2024, 8, 1, 11, 0),  // August 1, 2024, 11:00 AM
     endTime: DateTime(2024, 8, 1, 13, 0),    // August 1, 2024, 1:00 PM
     eventImage: 'https://example.com/event5.jpg',
-    creator: User(
+    creator: UserModel(
       userId: '67890',
       name: 'Ama Osei',
       email: 'ama.osei@example.com',
@@ -262,7 +262,7 @@ List<Event> eventDataList = [
     startTime: DateTime(2024, 8, 5, 15, 0),  // August 5, 2024, 3:00 PM
     endTime: DateTime(2024, 8, 5, 17, 0),    // August 5, 2024, 5:00 PM
     eventImage: 'https://example.com/event6.jpg',
-    creator: User(
+    creator: UserModel(
       userId: '12345',
       name: 'Kwame Mensah',
       email: 'kwame.mensah@example.com',

@@ -52,10 +52,15 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
           'Find Your Great Job',
           style: TextStyle(color: Colors.black, fontSize: 16),
         ),
-        actions:  [
-          CircleAvatar(
-            backgroundImage:
-                NetworkImage(_authService.getCurrentUser()?.photoURL ?? 'https://via.placeholder.com/150'),
+        actions: [
+          GestureDetector(
+            onTap: () {
+              _showUserProfileActions(context);
+            },
+            child: CircleAvatar(
+              backgroundImage:
+                  NetworkImage(_authService.getCurrentUser()?.photoURL ?? 'https://via.placeholder.com/150'),
+            ),
           ),
           const SizedBox(width: 16),
         ],
@@ -271,6 +276,38 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
       },
     );
   }
+
+  void _showUserProfileActions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              ListTile(
+                leading:  Icon(Icons.account_circle, color: Color.fromARGB(255, 128, 226, 177), size: 24),
+                title: const Text('View Profile', style: TextStyle(color: Colors.black87, fontSize: 16),),
+                onTap: () {
+                  Navigator.pop(context); 
+                },
+              ),
+              ListTile(
+                leading:  Icon(Icons.logout, color: const Color.fromARGB(255, 128, 226, 177), size: 24),
+                title: const Text('Logout', style: TextStyle(color: Colors.black87, fontSize: 16),),
+                onTap: () {
+                  _authService.signOut(context);
+                  Navigator.pop(context); 
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }
 
 class FilterTile extends StatelessWidget {
@@ -384,46 +421,47 @@ class JobCard extends StatelessWidget {
           ),
         );
       },
-      child:Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: Offset(0, 5),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Image.network(jobFeed.companyLogo!, height: 40),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  jobFeed.title,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  jobFeed.location!,
-                  style: const TextStyle(color: Colors.grey),
-                ),
-              ],
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: const [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 10,
+              offset: Offset(0, 5),
             ),
-          ),
-          Chip(
-            label: Text(jobFeed.type, style: const TextStyle(color: Colors.teal)),
-            backgroundColor: Colors.white,
-          ),
-        ],
+          ],
+        ),
+        child: Row(
+          children: [
+            Image.network(jobFeed.companyLogo!, height: 40),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    jobFeed.title,
+                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    jobFeed.location!,
+                    style: const TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+            Chip(
+              label: Text(jobFeed.type, style: const TextStyle(color: Colors.teal)),
+              backgroundColor: Colors.white,
+            ),
+          ],
+        ),
       ),
-    ));
+    );
   }
 }
