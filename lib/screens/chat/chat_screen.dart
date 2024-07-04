@@ -1,5 +1,4 @@
 import 'package:connecto/models/message_model.dart';
-import 'package:connecto/models/user_model.dart';
 import 'package:connecto/services/chat_service.dart';
 import 'package:connecto/widgets/chat/chat_appbar.dart';
 import 'package:connecto/widgets/chat/message_bubble.dart';

@@ -34,13 +34,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
       if (password == confirmPassword) {
         // Passwords match, proceed with registration
         setState(() {
-          _loading = true; // Start loading
+          _loading = true; 
         });
 
         Object? user = await _authService.registerWithEmailAndPassword(email, password, 'anonymoususer');
 
         setState(() {
-          _loading = false; // Stop loading
+          _loading = false;
         });
 
         if (user != null && user is User) {

@@ -96,7 +96,7 @@ class ConnectionService {
         .map((doc) => Connection.fromSnapshot(doc))
         .toList();
 
-    // Use a set to remove duplicate connectionIds
+    // remove duplicate connectionIds
     final connectionSet = <String>{};
     final uniqueConnections = <Connection>[];
 
@@ -109,41 +109,25 @@ class ConnectionService {
     return uniqueConnections;
   }
 
-  // // Fetch suggestions for connections (users with no existing connection)
-  // Future<List<UserModel>> getSuggestions(String currentUserId) async {
-  //   final existingConnections = await getAcceptedConnections(currentUserId);
-  //   final suggestionsQuery =
-  //       await _users.where('userId', isNotEqualTo: currentUserId).get();
-
-  //   final suggestedUsers = suggestionsQuery.docs
-  //       .map((doc) => UserModel.fromDocument(doc))
-  //       .where((user) => !existingConnections.any((connection) =>
-  //           connection.userId == user.userId ||
-  //           connection.connectedUserId == user.userId))
-  //       .toList();
-
-  //   return suggestedUsers;
-  // }
-
  
    Future<List<UserModel>> getSuggestions(String userId) async {
-    // Fetch all users
+    //  all users
     final allUsersSnapshot = await _users.get();
     final allUsers = allUsersSnapshot.docs.map((doc) => UserModel.fromSnapshot(doc)).toList();
 
-    // Fetch all connections for the user
+    //  all connections for the user
     final userConnectionsSnapshot = await _connections
         .where('user_id', isEqualTo: userId)
         .get();
     final connectedUserIds = userConnectionsSnapshot.docs.map((doc) => doc['connected_user_id'] as String).toSet();
 
-    // Fetch all reverse connections for the user
+    //  all reverse connections for the user
     final reverseConnectionsSnapshot = await _connections
         .where('connected_user_id', isEqualTo: userId)
         .get();
     final reverseConnectedUserIds = reverseConnectionsSnapshot.docs.map((doc) => doc['user_id'] as String).toSet();
 
-    // Combine both sets of connected user ids
+    // Combine sets of connected user ids
     final allConnectedUserIds = connectedUserIds.union(reverseConnectedUserIds);
 
     // Filter out connected users and the user themselves from the list of all users

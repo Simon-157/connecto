@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Media {
-  String id; 
+  String id;
   String userId;
-  String filePath; 
+  String filePath;
   String fileType; // "audio", "picture", "video"
   Timestamp timestamp;
 
@@ -17,16 +17,16 @@ class Media {
 
   factory Media.fromJson(Map<String, dynamic> json) {
     return Media(
-      id: json['id'],
-      userId: json['user_id'],
-      filePath: json['file_path'],
-      fileType: json['file_type'],
+      id: json['id'] ?? '',
+      userId: json['user_id'] ?? '',
+      filePath: json['file_path'] ?? '',
+      fileType: json['file_type']?? '',
       timestamp: json['timestamp'],
     );
   }
 
-  factory Media.fromDocument(DocumentSnapshot doc) {
-    return Media.fromJson(doc.data()! as Map<String, dynamic>)..id = doc.id;
+  factory Media.fromDocument(DocumentSnapshot<Map<String, dynamic>> doc) {
+    return Media.fromJson(doc.data()!)..id = doc.id;
   }
 
   Map<String, dynamic> toJson() {
@@ -38,7 +38,8 @@ class Media {
     };
   }
 
-  static fromDocumentReference(DocumentReference<Object?> documentReference) {
-    return Media.fromDocument(documentReference.get() as DocumentSnapshot<Object?>);
+  static Future<Media> fromDocumentReference(DocumentReference<Map<String, dynamic>> documentReference) async {
+    DocumentSnapshot<Map<String, dynamic>> doc = await documentReference.get();
+    return Media.fromDocument(doc);
   }
 }

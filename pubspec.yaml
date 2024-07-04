@@ -34,6 +34,8 @@ dependencies:
   rxdart: ^0.27.7
   async: ^2.11.0
   intl: ^0.19.0
+  video_player: ^2.9.1
+  audioplayers: ^6.0.0
    
 
 dev_dependencies:
@@ -42,6 +44,14 @@ dev_dependencies:
 
 
   flutter_lints: ^3.0.0
+
+  flutter_launcher_icons: "^0.13.1"
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/logo.png"
+  min_sdk_android: 23
 
 flutter:
 

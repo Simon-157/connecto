@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connecto/models/media_model.dart';
 import 'package:connecto/models/message_model.dart';
 import 'package:connecto/models/user_model.dart';
@@ -19,6 +20,7 @@ class MessageBubble extends StatefulWidget {
 
 class _MessageBubbleState extends State<MessageBubble> {
   late Future<UserModel?> senderFuture;
+  late Future<Media?> mediaFuture;
 
   final ChatService _chatService = ChatService();
 
@@ -26,6 +28,11 @@ class _MessageBubbleState extends State<MessageBubble> {
   void initState() {
     super.initState();
     senderFuture = _chatService.getUser(widget.message.senderId);
+    if (widget.message.media != null) {
+      mediaFuture = Media.fromDocumentReference(widget.message.media as DocumentReference<Map<String, dynamic>>);
+    } else {
+      mediaFuture = Future.value(null);
+    }
   }
 
   @override
@@ -78,7 +85,7 @@ class _MessageBubbleState extends State<MessageBubble> {
                         CircleAvatar(
                           backgroundImage: sender.profilePicture != null
                               ? NetworkImage(sender.profilePicture!)
-                              :  SvgPicture.asset('assets/icons/avatar.svg') as ImageProvider<Object>,
+                              : SvgPicture.asset('assets/icons/avatar.svg') as ImageProvider<Object>,
                           radius: 15.0,
                         ),
                       const SizedBox(width: 8.0),
@@ -94,7 +101,21 @@ class _MessageBubbleState extends State<MessageBubble> {
                   ),
                   const SizedBox(height: 5),
                   if (widget.message.media != null)
-                    MediaPreview(media: Media.fromDocumentReference(widget.message.media!)),
+                    FutureBuilder<Media?>(
+                      future: mediaFuture,
+                      builder: (context, mediaSnapshot) {
+                        if (mediaSnapshot.connectionState == ConnectionState.waiting) {
+                          return const CircularProgressIndicator();
+                        } else if (mediaSnapshot.hasError) {
+                          return Text('Error: ${mediaSnapshot.error}');
+                        } else if (!mediaSnapshot.hasData) {
+                          return const Text('Media not found');
+                        } else {
+                          final media = mediaSnapshot.data!;
+                          return MediaPreview(media: media);
+                        }
+                      },
+                    ),
                   Text(
                     widget.message.content,
                     style: TextStyle(
