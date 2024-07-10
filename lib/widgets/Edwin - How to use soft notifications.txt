@@ -1,0 +1,28 @@
+// 1. import 'notificationWidget.dart';
+
+// 2. Make sure you wrap the main method with a material app else it wont work especially for buttons:
+void main() {
+  runApp(MaterialApp(home: MyApp()));
+}
+
+// 3. add some context to link to widget prior override:
+  void showNotification(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Stack(
+          children: [
+            NotificationWidget(message: message),
+          ],
+        );
+      },
+    );
+  }
+
+
+//4. Add your stuff:
+ElevatedButton(
+    onPressed: () {
+      showNotification(context, "Transaction Successful");
+    },
+    child: Text("Send"))
