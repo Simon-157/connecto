@@ -1,5 +1,3 @@
-// dummy_data.dart
-
 class Skill {
   final String name;
   final String level;

@@ -3,6 +3,7 @@ import 'package:connecto/screens/auth/register_screen.dart';
 import 'package:connecto/screens/onboarding/splash_screen.dart';
 import 'package:connecto/screens/sessions/create_schedule_screen.dart';
 import 'package:connecto/shared/page_navigation.dart';
+import 'package:connecto/utils/ui.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +20,7 @@ class ConnectoApp extends StatelessWidget {
     return MaterialApp(
       title: 'Connecto',
       debugShowCheckedModeBanner: false,
+      scaffoldMessengerKey: scaffoldMessengerKey,
       theme: ThemeData(
         primaryColor: const Color.fromARGB(255, 40, 218, 164),
         hintColor: Colors.grey,
