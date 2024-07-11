@@ -1,4 +1,5 @@
 import 'package:connectivity/connectivity.dart';
+import 'package:connecto/screens/jobs/notification_screen.dart';
 import 'package:connecto/services/auth_service.dart';
 import 'package:connecto/services/job_feed_service.dart';
 import 'package:flutter/material.dart';
@@ -53,6 +54,12 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
           style: TextStyle(color: Colors.black, fontSize: 16),
         ),
         actions: [
+          GestureDetector(
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => NotificationListWidget(userId: _authService.getCurrentUser()!.uid)));
+            },
+            child: const Icon(Icons.notifications, color: Colors.black54, size: 24.0,),
+          ),
           GestureDetector(
             onTap: () {
               _showUserProfileActions(context);

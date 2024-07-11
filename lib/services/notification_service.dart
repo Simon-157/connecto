@@ -1,82 +1,88 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:connecto/models/connection_model.dart';
-import 'package:connecto/models/user_model.dart';
+import 'package:connecto/models/notification_model.dart';
 
-class ConnectionService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+class NotificationService {
+  final CollectionReference _notificationsCollection = FirebaseFirestore.instance.collection('notifications');
 
-  // Create Connection
-  Future<void> createConnection(String userId, String connectedUserId, String status) async {
+  // Create a new notification
+  Future<void> createNotification(NotificationModel notification) async {
     try {
-      DocumentReference docRef = _firestore.collection('connections').doc();
-      String connectionId = docRef.id;
-
-      await docRef.set({
-        'connection_id': connectionId,
-        'user_id': userId,
-        'connected_user_id': connectedUserId,
-        'status': status,
-      });
-    } catch (error) {
-      print(error.toString());
-      throw Exception('Failed to create connection');
+      await _notificationsCollection.doc(notification.notificationId).set(notification.toJson());
+    } catch (e) {
+      print('Error creating notification: $e');
+      throw e;
     }
   }
 
-  // Read Connection
-  Future<Connection?> getConnection(String connectionId) async {
+  // Retrieve a notification by ID
+  Future<NotificationModel?> getNotificationById(String notificationId) async {
     try {
-      DocumentSnapshot doc = await _firestore.collection('connections').doc(connectionId).get();
+      DocumentSnapshot doc = await _notificationsCollection.doc(notificationId).get();
       if (doc.exists) {
-        return Connection.fromJson(doc.data()! as Map<String, dynamic>);
+        return NotificationModel.fromJson(doc.data() as Map<String, dynamic>);
       }
       return null;
-    } catch (error) {
-      print(error.toString());
-      throw Exception('Failed to get connection');
+    } catch (e) {
+      print('Error retrieving notification: $e');
+      throw e;
     }
   }
 
-  // Update Connection
-  Future<void> updateConnection(String connectionId, String status) async {
+  // Retrieve all notifications for a specific user
+  Future<List<NotificationModel>> getNotificationsByUserId(String userId) async {
     try {
-      await _firestore.collection('connections').doc(connectionId).update({
-        'status': status,
-      });
-    } catch (error) {
-      print(error.toString());
-      throw Exception('Failed to update connection');
+      QuerySnapshot querySnapshot = await _notificationsCollection.where('user_id', isEqualTo: userId).get();
+      return querySnapshot.docs.map((doc) => NotificationModel.fromJson(doc.data() as Map<String, dynamic>)).toList();
+    } catch (e) {
+      print('Error retrieving notifications: $e');
+      throw e;
     }
   }
 
-  // Delete Connection
-  Future<void> deleteConnection(String connectionId) async {
+  // Update a notification
+  Future<void> updateNotification(NotificationModel notification) async {
     try {
-      await _firestore.collection('connections').doc(connectionId).delete();
-    } catch (error) {
-      print(error.toString());
-      throw Exception('Failed to delete connection');
+      await _notificationsCollection.doc(notification.notificationId).update(notification.toJson());
+    } catch (e) {
+      print('Error updating notification: $e');
+      throw e;
     }
   }
 
-  // Get Connected Users with User Info for a Given User
-  Future<List<ConnectionWithUser>> getConnectedUsersWithInfo(String userId) async {
+  // Delete a notification
+  Future<void> deleteNotification(String notificationId) async {
     try {
-      QuerySnapshot querySnapshot = await _firestore
-          .collection('connections')
-          .where('user_id', isEqualTo: userId)
-          .get();
-      List<ConnectionWithUser> connectedUsersWithInfo = [];
+      await _notificationsCollection.doc(notificationId).delete();
+    } catch (e) {
+      print('Error deleting notification: $e');
+      throw e;
+    }
+  }
+
+  // Mark a notification as read
+  Future<void> markNotificationAsRead(String notificationId) async {
+    try {
+      await _notificationsCollection.doc(notificationId).update({'is_read': true});
+    } catch (e) {
+      print('Error marking notification as read: $e');
+      throw e;
+    }
+  }
+
+  // Mark all notifications for a user as read
+  Future<void> markAllNotificationsAsRead(String userId) async {
+    try {
+      QuerySnapshot querySnapshot = await _notificationsCollection.where('user_id', isEqualTo: userId).get();
+      WriteBatch batch = FirebaseFirestore.instance.batch();
+
       for (QueryDocumentSnapshot doc in querySnapshot.docs) {
-        Connection connection = Connection.fromJson(doc.data()! as Map<String, dynamic>);
-        DocumentSnapshot userDoc = await _firestore.collection('users').doc(connection.connectedUserId).get();
-        UserModel user = UserModel.fromDocument(userDoc);
-        connectedUsersWithInfo.add(ConnectionWithUser(connection: connection, user: user));
+        batch.update(doc.reference, {'is_read': true});
       }
-      return connectedUsersWithInfo;
-    } catch (error) {
-      print(error.toString());
-      throw Exception('Failed to get connected users with info');
+
+      await batch.commit();
+    } catch (e) {
+      print('Error marking all notifications as read: $e');
+      throw e;
     }
   }
 }

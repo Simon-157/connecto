@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+FocusNode chatFocusNode = FocusNode();
+final TextEditingController chatController = TextEditingController();
+final ScrollController scrollController = ScrollController();
 
 void showSnackbar(BuildContext context, String message) {
   final snackBar = 
@@ -20,3 +23,16 @@ void showSnackbar(BuildContext context, String message) {
 
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
+
+
+
+
+  void scrollDown() {
+    if (scrollController.hasClients) {
+      scrollController.animateTo(
+        scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 1000),
+        curve: Curves.fastOutSlowIn,
+      );
+    }
+  }

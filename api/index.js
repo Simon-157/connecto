@@ -275,6 +275,7 @@ app.put('/events/:eventId', async (req, res) => {
   }
 });
 
+
 // Delete an event
 app.delete('/events/:eventId', async (req, res) => {
   try {
@@ -285,6 +286,36 @@ app.delete('/events/:eventId', async (req, res) => {
     handleError(res, error);
   }
 });
+
+
+// create notifications 
+app.post('/notifications', async (req, res) => {
+  try {
+    const notificationData = req.body;
+    await db.collection('notifications').doc(notificationData.notificationId).set(notificationData);
+    res.status(201).send('Notification created successfully');
+  } catch (error) {
+    handleError(res, error);
+  }
+});
+
+// Create batch notifications
+app.post('/notifications/batch', async (req, res) => {
+  try {
+    const notifications = req.body;
+    const batch = db.batch();
+    notifications.forEach(notification => {
+      const notificationRef = db.collection('notifications').doc(notification.notification_id);
+      batch.set(notificationRef, notification);
+    });
+    
+    await batch.commit();
+    res.status(201).send('Batch notifications created successfully');
+  } catch (error) {
+    handleError(res, error);
+  }
+});
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

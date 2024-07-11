@@ -2,12 +2,11 @@ import 'package:connecto/models/media_model.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:audioplayers/src/source.dart';
 
 class MediaPreview extends StatefulWidget {
   final Media media;
 
-  MediaPreview({super.key, required this.media});
+  const MediaPreview({super.key, required this.media});
 
   @override
   _MediaPreviewState createState() => _MediaPreviewState();
@@ -17,6 +16,9 @@ class _MediaPreviewState extends State<MediaPreview> {
   late VideoPlayerController _videoController;
   late AudioPlayer _audioPlayer;
   bool _isVideoInitialized = false;
+  bool _isPlaying = false;
+  Duration _duration = Duration.zero;
+  Duration _position = Duration.zero;
 
   @override
   void initState() {
@@ -30,6 +32,22 @@ class _MediaPreviewState extends State<MediaPreview> {
         });
     } else if (widget.media.fileType == 'audio') {
       _audioPlayer = AudioPlayer();
+      _audioPlayer.onDurationChanged.listen((duration) {
+        setState(() {
+          _duration = duration;
+        });
+      });
+      _audioPlayer.onPositionChanged.listen((position) {
+        setState(() {
+          _position = position;
+        });
+      });
+      _audioPlayer.onPlayerComplete.listen((event) {
+        setState(() {
+          _isPlaying = false;
+          _position = Duration.zero;
+        });
+      });
     }
   }
 
@@ -52,6 +70,13 @@ class _MediaPreviewState extends State<MediaPreview> {
         );
       },
     );
+  }
+
+  String _formatDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
+    final minutes = twoDigits(duration.inMinutes.remainder(60));
+    final seconds = twoDigits(duration.inSeconds.remainder(60));
+    return '$minutes:$seconds';
   }
 
   @override
@@ -82,24 +107,54 @@ class _MediaPreviewState extends State<MediaPreview> {
         ),
       );
     } else if (widget.media.fileType == 'audio') {
-      return GestureDetector(
-        onTap: () => _showFullScreen(
-          context,
-          IconButton(
-            icon: Icon(Icons.play_arrow),
-            onPressed: () async {
-              await _audioPlayer.play(UrlSource(widget.media.filePath));
-            },
-          ),
-        ),
-        child: Container(
-          margin: EdgeInsets.only(bottom: 5.0),
-          child: IconButton(
-            icon: Icon(Icons.play_arrow),
-            onPressed: () async {
-              await _audioPlayer.play(UrlSource(widget.media.filePath));
-            },
-          ),
+      return Container(
+        margin: EdgeInsets.only(bottom: 5.0),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                IconButton(
+                  icon: Icon(
+                    _isPlaying ? Icons.pause : Icons.play_arrow,
+                  ),
+                  onPressed: () async {
+                    if (_isPlaying) {
+                      await _audioPlayer.pause();
+                    } else {
+                      await _audioPlayer.play(UrlSource(widget.media.filePath));
+                    }
+                    setState(() {
+                      _isPlaying = !_isPlaying;
+                    });
+                  },
+                ),
+                Text(
+                  _formatDuration(_position),
+                  style: TextStyle(fontSize: 14),
+                ),
+                Expanded(
+                  child: Slider(
+                    value: _position.inSeconds.toDouble(),
+                    max: _duration.inSeconds.toDouble(),
+                    onChanged: (value) async {
+                      final position = Duration(seconds: value.toInt());
+                      await _audioPlayer.seek(position);
+                      await _audioPlayer.resume();
+                    },
+                  ),
+                ),
+                Text(
+                  _formatDuration(_duration),
+                  style: TextStyle(fontSize: 14),
+                ),
+              ],
+            ),
+            if (_isPlaying)
+              LinearProgressIndicator(
+                value: _position.inSeconds.toDouble() /
+                    _duration.inSeconds.toDouble(),
+              ),
+          ],
         ),
       );
     } else {
