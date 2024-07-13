@@ -13,6 +13,8 @@ class UserModel {
   String role;
   String address;
 
+  var userToken;
+
   UserModel({
     required this.id,
     required this.userId,

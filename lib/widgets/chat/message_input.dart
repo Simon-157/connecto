@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:connecto/models/notification_model.dart';
 import 'package:connecto/services/chat_service.dart';
+import 'package:connecto/services/notification_service.dart';
 import 'package:connecto/utils/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -23,6 +25,7 @@ final FocusNode? chatFocusNode;
 class _MessageInputState extends State<MessageInput> {
   final TextEditingController _controller = TextEditingController();
   final ChatService _chatService = ChatService();
+  final NotificationService _notificationService = NotificationService();
   String? _mediaPath;
   String? _mediaType;
   final picker = ImagePicker();
@@ -59,7 +62,7 @@ class _MessageInputState extends State<MessageInput> {
     await _audioRecorder!.openRecorder();
   }
 
-  void _sendMessage() {
+  Future<void> _sendMessage() async {
     if (_controller.text.isEmpty && _mediaPath == null && _audioPath == null) {
       return;
     }
@@ -70,6 +73,15 @@ class _MessageInputState extends State<MessageInput> {
       filePath: _mediaPath ?? _audioPath,
       fileType: _mediaType ?? 'audio',
     );
+    // if successful
+    // create notification
+    await _notificationService.createNotification(
+      NotificationModel(userId: widget.receiverId,
+      senderId: widget.userId,
+      type: 'new_message',
+      message: _controller.text, notificationId: '${DateTime.now().millisecondsSinceEpoch}', timestamp: DateTime.now(),)
+    );
+
     _controller.clear();
     setState(() {
       _mediaPath = null;
@@ -231,9 +243,9 @@ class _MessageInputState extends State<MessageInput> {
               _buildMediaPreview(),
               const SizedBox(height: 16.0),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   Navigator.pop(context); // Close preview
-                  _sendMessage();
+                  await _sendMessage();
                 },
                 child: const Text('Send'),
               ),
@@ -331,7 +343,7 @@ class _MessageInputState extends State<MessageInput> {
                   hintText: 'Type a message...',
                   border: InputBorder.none,
                 ),
-                onSubmitted: (_) => _sendMessage(),
+                onSubmitted: (_) async => await _sendMessage(),
               ),
             ),
           ),

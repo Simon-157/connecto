@@ -97,6 +97,12 @@ class AuthService {
           'createdAt': FieldValue.serverTimestamp(),
         });
       }
+      // if user exists and userToken is not in user doc, update user with userToken
+      else if (userDoc.exists && userDoc.data() == null) {
+        await _firestore.collection('users').doc(user?.uid).update({
+          'userToken': user?.uid,
+        });
+      }
 
       return user;
     } catch (error) {
@@ -104,6 +110,33 @@ class AuthService {
       return null;
     }
   }
+
+Future<void> updateUserToken(String userToken) async {
+  try {
+    User? user = _auth.currentUser;
+    if (user == null) {
+      throw Exception('User is null');
+    }
+
+    DocumentSnapshot userDoc =
+        await _firestore.collection('users').doc(user.uid).get();
+
+    // Check if the document exists and if it has a userToken field
+    if (userDoc.exists) {
+      var data = userDoc.data() as Map<String, dynamic>?;
+      if (data != null && data.containsKey('userToken') && data['userToken'] != null) {
+        return;
+      }
+    }
+   
+    await _firestore.collection('users').doc(user.uid).update({
+      'userToken': userToken,
+    });
+    
+  } catch (error) {
+    print('Error updating user token: $error');
+  }
+}
 
   // Sign out
   Future<void> signOut( BuildContext context) async {

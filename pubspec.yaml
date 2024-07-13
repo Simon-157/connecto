@@ -37,6 +37,8 @@ dependencies:
   video_player: ^2.9.1
   audioplayers: ^6.0.0
   flutter_sound: ^9.6.0
+  flutter_local_notifications: ^17.2.1+1
+  firebase_messaging: ^14.9.4
    
 
 dev_dependencies:

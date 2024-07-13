@@ -2,6 +2,7 @@ import 'package:connecto/screens/auth/login_screen.dart';
 import 'package:connecto/screens/auth/register_screen.dart';
 import 'package:connecto/screens/onboarding/splash_screen.dart';
 import 'package:connecto/screens/sessions/create_schedule_screen.dart';
+import 'package:connecto/services/notification_service.dart';
 import 'package:connecto/shared/page_navigation.dart';
 import 'package:connecto/utils/ui.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -11,6 +12,8 @@ import 'package:flutter/material.dart';
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await NotificationService().init();
+
   runApp(ConnectoApp());
 }
 

@@ -18,9 +18,9 @@
 
     <string name="default_web_client_id" translatable="false">112565834527614698056</string>
     <string name="firebase_database_url" translatable="false">your-database-url</string>
-    <string name="gcm_defaultSenderId" translatable="false">your-sender-id</string>
+    <string name="gcm_defaultSenderId" translatable="false">890338595308</string>
     <string name="google_api_key" translatable="false">AIzaSyBQsJWAar3YlM7A6g-EyrdZHYThAjvHIek</string>
-    <string name="google_app_id" translatable="false">45f1507ec140e6273262a5dea162fcd8df2b1b18</string>
+    <string name="google_app_id" translatable="false">1:890338595308:android:23ed3fb1bbe88405ea70c9</string>
     <string name="project_id" translatable="false">connecto-428002</string>
     <string name="google_storage_bucket" translatable="false">connecto-428002.appspot.com</string>
 

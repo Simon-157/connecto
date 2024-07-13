@@ -1,70 +1,136 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connecto/models/notification_model.dart';
+import 'package:connecto/services/auth_service.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationService {
   final CollectionReference _notificationsCollection = FirebaseFirestore.instance.collection('notifications');
+  final AuthService _authService = AuthService();
+  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  // Create a new notification
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+
+  Future<void> init() async {
+    await Firebase.initializeApp();
+    // const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
+    // final InitializationSettings initializationSettings = InitializationSettings(android: initializationSettingsAndroid);
+    // await _flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    await _firebaseMessaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    final String? token = await _firebaseMessaging.getToken();
+    print('token: $token');
+    await _authService.updateUserToken(token!);
+
+    FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleNotificationOpened);
+    Future<void> _handleBackgroundMessage(RemoteMessage message) async {
+      _handleNotification(message);
+    }
+  }
+
+  void _handleForegroundMessage(RemoteMessage message) {
+    if (message.notification != null) {
+      _showNotification(message);
+    }
+  }
+
+   void _handleBackgroundMessage(RemoteMessage message) async {
+    _handleNotification(message);
+  }
+
+  void _handleNotificationOpened(RemoteMessage message) {
+    _handleNotification(message);
+  }
+
+  void _handleNotification(RemoteMessage message) {
+    switch (message.data['type']) {
+      case 'connection_request':
+        // Handle connection request
+        break;
+      case 'connection_acceptance':
+        // Handle connection acceptance
+        break;
+      case 'new_message':
+        // Handle new message
+        break;
+      default:
+        break;
+    }
+  }
+
+  void _showNotification(RemoteMessage message) {
+    _flutterLocalNotificationsPlugin.show(
+      0,
+      message.notification!.title,
+      message.notification!.body,
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'your_channel_id',
+          'your_channel_name',
+          channelDescription: 'your_channel_description',
+          importance: Importance.high,
+          priority: Priority.high,
+        ),
+      ),
+    );
+  }
+
   Future<void> createNotification(NotificationModel notification) async {
     try {
       await _notificationsCollection.doc(notification.notificationId).set(notification.toJson());
-    } catch (e) {
-      print('Error creating notification: $e');
+    } on FirebaseException catch (e) {
       throw e;
     }
   }
 
-  // Retrieve a notification by ID
   Future<NotificationModel?> getNotificationById(String notificationId) async {
     try {
-      DocumentSnapshot doc = await _notificationsCollection.doc(notificationId).get();
-      if (doc.exists) {
-        return NotificationModel.fromJson(doc.data() as Map<String, dynamic>);
-      }
-      return null;
-    } catch (e) {
-      print('Error retrieving notification: $e');
+      final DocumentSnapshot doc = await _notificationsCollection.doc(notificationId).get();
+      return doc.exists ? NotificationModel.fromJson(doc.data() as Map<String, dynamic>) : null;
+    } on FirebaseException catch (e) {
       throw e;
     }
   }
 
-  // Retrieve all notifications for a specific user
   Future<List<NotificationModel>> getNotificationsByUserId(String userId) async {
     try {
-      QuerySnapshot querySnapshot = await _notificationsCollection.where('user_id', isEqualTo: userId).get();
+      final QuerySnapshot querySnapshot = await _notificationsCollection.where('user_id', isEqualTo: userId).get();
       return querySnapshot.docs.map((doc) => NotificationModel.fromJson(doc.data() as Map<String, dynamic>)).toList();
-    } catch (e) {
-      print('Error retrieving notifications: $e');
+    } on FirebaseException catch (e) {
       throw e;
     }
   }
 
-  // Update a notification
   Future<void> updateNotification(NotificationModel notification) async {
     try {
       await _notificationsCollection.doc(notification.notificationId).update(notification.toJson());
-    } catch (e) {
-      print('Error updating notification: $e');
+    } on FirebaseException catch (e) {
       throw e;
     }
   }
 
-  // Delete a notification
   Future<void> deleteNotification(String notificationId) async {
     try {
       await _notificationsCollection.doc(notificationId).delete();
-    } catch (e) {
-      print('Error deleting notification: $e');
+    } on FirebaseException catch (e) {
       throw e;
     }
   }
 
-  // Mark a notification as read
   Future<void> markNotificationAsRead(String notificationId) async {
     try {
       await _notificationsCollection.doc(notificationId).update({'is_read': true});
-    } catch (e) {
-      print('Error marking notification as read: $e');
+    } on FirebaseException catch (e) {
       throw e;
     }
   }
