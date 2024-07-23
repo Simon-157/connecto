@@ -5,7 +5,7 @@ import 'package:connecto/models/event_model.dart';
 import 'package:connecto/models/job_feed_model.dart';
 import 'package:connecto/models/user_model.dart';
 
-// Function to get a random avatar URL
+// // Function to get a random avatar URL
 String getRandomAvatar() {
   List<String> avatars = [
     "https://randomuser.me/api/portraits/men/1.jpg",
@@ -28,9 +28,7 @@ List<UserModel> userDataList = [
     email: 'kwame.mensah@example.com',
     password: 'password123',
     profilePicture: getRandomAvatar(),
-    bio: 'Software developer with a passion for mobile apps.',
-    skills: {'programming': 'Dart, Flutter', 'design': 'UI/UX'},
-    location: {'latitude': 5.6037, 'longitude': -0.1870},
+    bio: 'Software developer with a passion for mobile apps.',    location: {'latitude': 5.6037, 'longitude': -0.1870},
     address: 'Accra, Ghana',
     role: 'mentor', id: '',
   ),
@@ -41,7 +39,6 @@ List<UserModel> userDataList = [
     password: 'password456',
     profilePicture: getRandomAvatar(),
     bio: 'Graphic designer with a love for digital art.',
-    skills: {'design': 'Photoshop, Illustrator', 'animation': 'After Effects'},
     location: {'latitude': 6.5244, 'longitude': -0.2333},
     address: 'Kumasi, Ghana',
     role: 'mentee', id: '',
@@ -53,7 +50,6 @@ List<UserModel> userDataList = [
     password: 'password789',
     profilePicture: getRandomAvatar(),
     bio: 'Data scientist specializing in machine learning and AI.',
-    skills: {'data_analysis': 'Python, R', 'machine_learning': 'TensorFlow, Keras'},
     location: {'latitude': 5.5560, 'longitude': -0.1969},
     address: 'Tema, Ghana',
     role: 'mentor', id: '',
@@ -65,7 +61,6 @@ List<UserModel> userDataList = [
     password: 'password101',
     profilePicture: getRandomAvatar(),
     bio: 'Marketing expert with a focus on social media strategy.',
-    skills: {'marketing': 'SEO, Content Marketing', 'social_media': 'Facebook, Instagram'},
     location: {'latitude': 6.1300, 'longitude': -0.1962},
     address: 'Cape Coast, Ghana',
     role: 'mentee', id: '',
@@ -77,7 +72,6 @@ List<UserModel> userDataList = [
     password: 'password202',
     profilePicture: getRandomAvatar(),
     bio: 'Full-stack developer with expertise in web technologies.',
-    skills: {'programming': 'JavaScript, React, Node.js', 'database': 'MongoDB, SQL'},
     location: {'latitude': 5.8267, 'longitude': -0.2931},
     address: 'Takoradi, Ghana',
     role: 'mentor', id: '',
@@ -89,7 +83,6 @@ List<UserModel> userDataList = [
     password: 'password303',
     profilePicture: getRandomAvatar(),
     bio: 'Digital marketer with a knack for content creation.',
-    skills: {'marketing': 'Content Marketing, SEO', 'social_media': 'LinkedIn, Twitter'},
     location: {'latitude': 5.5608, 'longitude': -0.2057},
     address: 'Kasoa, Ghana',
     role: 'mentee', id: '',
@@ -100,182 +93,182 @@ List<UserModel> userDataList = [
 
 
 
-List<Connection> connectionDataList = [
-  Connection(
-    connectionId: 'conn1',
-    userId: '12345',
-    connectedUserId: '67890',
-    status: 'pending',
-  ),
-  Connection(
-    connectionId: 'conn2',
-    userId: '11223',
-    connectedUserId: '44556',
-    status: 'accepted',
-  ),
-  Connection(
-    connectionId: 'conn3',
-    userId: '77889',
-    connectedUserId: '99112',
-    status: 'pending',
-  ),
-  Connection(
-    connectionId: 'conn4',
-    userId: '44556',
-    connectedUserId: '12345',
-    status: 'rejected',
-  ),
-  Connection(
-    connectionId: 'conn5',
-    userId: '67890',
-    connectedUserId: '11223',
-    status: 'accepted',
-  ),
-  Connection(
-    connectionId: 'conn6',
-    userId: '12345',
-    connectedUserId: '77889',
-    status: 'accepted',
-  ),
-  Connection(
-    connectionId: 'conn7',
-    userId: '12345',
-    connectedUserId: '44556',
-    status: 'pending',
-  ),
-];
+// List<Connection> connectionDataList = [
+//   Connection(
+//     connectionId: 'conn1',
+//     userId: '12345',
+//     connectedUserId: '67890',
+//     status: 'pending',
+//   ),
+//   Connection(
+//     connectionId: 'conn2',
+//     userId: '11223',
+//     connectedUserId: '44556',
+//     status: 'accepted',
+//   ),
+//   Connection(
+//     connectionId: 'conn3',
+//     userId: '77889',
+//     connectedUserId: '99112',
+//     status: 'pending',
+//   ),
+//   Connection(
+//     connectionId: 'conn4',
+//     userId: '44556',
+//     connectedUserId: '12345',
+//     status: 'rejected',
+//   ),
+//   Connection(
+//     connectionId: 'conn5',
+//     userId: '67890',
+//     connectedUserId: '11223',
+//     status: 'accepted',
+//   ),
+//   Connection(
+//     connectionId: 'conn6',
+//     userId: '12345',
+//     connectedUserId: '77889',
+//     status: 'accepted',
+//   ),
+//   Connection(
+//     connectionId: 'conn7',
+//     userId: '12345',
+//     connectedUserId: '44556',
+//     status: 'pending',
+//   ),
+// ];
 
 
 
-// Dummy data for events
-List<Event> eventDataList = [
-  Event(
-    eventId: 'event1',
-    creatorId: '12345',
-    title: 'Tech Talk on Flutter',
-    description: 'Join us for an interactive session on Flutter development.',
-    startTime: DateTime(2024, 7, 10, 14, 0), // July 10, 2024, 2:00 PM
-    endTime: DateTime(2024, 7, 10, 16, 0),   // July 10, 2024, 4:00 PM
-    eventImage: 'https://example.com/event1.jpg',
-    creator: UserModel(
-      userId: '12345',
-      name: 'Kwame Mensah',
-      email: 'kwame.mensah@example.com',
-      password: 'password123',
-      profilePicture: 'https://randomuser.me/api/portraits/men/1.jpg',
-      bio: 'Software developer with a passion for mobile apps.',
-      skills: {'programming': 'Dart, Flutter', 'design': 'UI/UX'},
-      location: {'latitude': 5.6037, 'longitude': -0.1870},
-      role: 'mentor',
-      address: 'Accra, Ghana', id: '',
-    ),
-  ),
-  Event(
-    eventId: 'event2',
-    creatorId: '11223',
-    title: 'Webinar on Machine Learning',
-    description: 'Learn about the latest trends in machine learning.',
-    startTime: DateTime(2024, 7, 15, 10, 0), // July 15, 2024, 10:00 AM
-    endTime: DateTime(2024, 7, 15, 12, 0),   // July 15, 2024, 12:00 PM
-    eventImage: 'https://example.com/event2.jpg',
-    creator: UserModel(
-      userId: '11223',
-      name: 'Kojo Asante',
-      email: 'kojo.asante@example.com',
-      password: 'password789',
-      profilePicture: 'https://randomuser.me/api/portraits/men/2.jpg',
-      bio: 'Data scientist specializing in machine learning and AI.',
-      skills: {'data_analysis': 'Python, R', 'machine_learning': 'TensorFlow, Keras'},
-      location: {'latitude': 5.5560, 'longitude': -0.1969},
-      role: 'mentor',
-      address: 'Tema, Ghana', id: '',
-    ),
-  ),
-  Event(
-    eventId: 'event3',
-    creatorId: '77889',
-    title: 'Networking Mixer',
-    description: 'Connect with professionals in your industry.',
-    startTime: DateTime(2024, 7, 20, 18, 0), // July 20, 2024, 6:00 PM
-    endTime: DateTime(2024, 7, 20, 20, 0),   // July 20, 2024, 8:00 PM
-    eventImage: 'https://example.com/event3.jpg',
-    creator: UserModel(
-      userId: '77889',
-      name: 'Kofi Boateng',
-      email: 'kofi.boateng@example.com',
-      password: 'password202',
-      profilePicture: 'https://randomuser.me/api/portraits/men/3.jpg',
-      bio: 'Full-stack developer with expertise in web technologies.',
-      skills: {'programming': 'JavaScript, React, Node.js', 'database': 'MongoDB, SQL'},
-      location: {'latitude': 5.8267, 'longitude': -0.2931},
-      role: 'mentor',
-      address: 'Takoradi, Ghana', id: '',
-    ),
-  ),
-  Event(
-    eventId: 'event4',
-    creatorId: '44556',
-    title: 'Startup Pitch Competition',
-    description: 'Pitch your startup idea to potential investors.',
-    startTime: DateTime(2024, 7, 25, 13, 0), // July 25, 2024, 1:00 PM
-    endTime: DateTime(2024, 7, 25, 15, 0),   // July 25, 2024, 3:00 PM
-    eventImage: 'https://example.com/event4.jpg',
-    creator: UserModel(
-      userId: '44556',
-      name: 'Yaa Nyarko',
-      email: 'yaa.nyarko@example.com',
-      password: 'password101',
-      profilePicture: 'https://randomuser.me/api/portraits/women/1.jpg',
-      bio: 'Marketing expert with a focus on social media strategy.',
-      skills: {'marketing': 'SEO, Content Marketing', 'social_media': 'Facebook, Instagram'},
-      location: {'latitude': 6.1300, 'longitude': -0.1962},
-      role: 'mentee',
-      address: 'Cape Coast, Ghana', id: '',
-    ),
-  ),
-  Event(
-    eventId: 'event5',
-    creatorId: '67890',
-    title: 'Panel Discussion on Digital Marketing',
-    description: 'Insights from experts on the future of digital marketing.',
-    startTime: DateTime(2024, 8, 1, 11, 0),  // August 1, 2024, 11:00 AM
-    endTime: DateTime(2024, 8, 1, 13, 0),    // August 1, 2024, 1:00 PM
-    eventImage: 'https://example.com/event5.jpg',
-    creator: UserModel(
-      userId: '67890',
-      name: 'Ama Osei',
-      email: 'ama.osei@example.com',
-      password: 'password456',
-      profilePicture: 'https://randomuser.me/api/portraits/women/2.jpg',
-      bio: 'Graphic designer with a love for digital art.',
-      skills: {'design': 'Photoshop, Illustrator', 'animation': 'After Effects'},
-      location: {'latitude': 6.5244, 'longitude': -0.2333},
-      role: 'mentee',
-      address: 'Kumasi, Ghana', id: '',
-    ),
-  ),
-  Event(
-    eventId: 'event6',
-    creatorId: '12345',
-    title: 'Workshop on Mobile App Design',
-    description: 'Hands-on session on designing user-friendly mobile apps.',
-    startTime: DateTime(2024, 8, 5, 15, 0),  // August 5, 2024, 3:00 PM
-    endTime: DateTime(2024, 8, 5, 17, 0),    // August 5, 2024, 5:00 PM
-    eventImage: 'https://example.com/event6.jpg',
-    creator: UserModel(
-      userId: '12345',
-      name: 'Kwame Mensah',
-      email: 'kwame.mensah@example.com',
-      password: 'password123',
-      profilePicture: 'https://randomuser.me/api/portraits/men/1.jpg',
-      bio: 'Software developer with a passion for mobile apps.',
-      skills: {'programming': 'Dart, Flutter', 'design': 'UI/UX'},
-      location: {'latitude': 5.6037, 'longitude': -0.1870},
-      role: 'mentor',
-      address: 'Accra, Ghana', id: '',
-    ),
-  ),
-];
+// // Dummy data for events
+// List<Event> eventDataList = [
+//   Event(
+//     eventId: 'event1',
+//     creatorId: '12345',
+//     title: 'Tech Talk on Flutter',
+//     description: 'Join us for an interactive session on Flutter development.',
+//     startTime: DateTime(2024, 7, 10, 14, 0), // July 10, 2024, 2:00 PM
+//     endTime: DateTime(2024, 7, 10, 16, 0),   // July 10, 2024, 4:00 PM
+//     eventImage: 'https://example.com/event1.jpg',
+//     creator: UserModel(
+//       userId: '12345',
+//       name: 'Kwame Mensah',
+//       email: 'kwame.mensah@example.com',
+//       password: 'password123',
+//       profilePicture: 'https://randomuser.me/api/portraits/men/1.jpg',
+//       bio: 'Software developer with a passion for mobile apps.',
+//       skills: {'programming': 'Dart, Flutter', 'design': 'UI/UX'},
+//       location: {'latitude': 5.6037, 'longitude': -0.1870},
+//       role: 'mentor',
+//       address: 'Accra, Ghana', id: '',
+//     ),
+//   ),
+//   Event(
+//     eventId: 'event2',
+//     creatorId: '11223',
+//     title: 'Webinar on Machine Learning',
+//     description: 'Learn about the latest trends in machine learning.',
+//     startTime: DateTime(2024, 7, 15, 10, 0), // July 15, 2024, 10:00 AM
+//     endTime: DateTime(2024, 7, 15, 12, 0),   // July 15, 2024, 12:00 PM
+//     eventImage: 'https://example.com/event2.jpg',
+//     creator: UserModel(
+//       userId: '11223',
+//       name: 'Kojo Asante',
+//       email: 'kojo.asante@example.com',
+//       password: 'password789',
+//       profilePicture: 'https://randomuser.me/api/portraits/men/2.jpg',
+//       bio: 'Data scientist specializing in machine learning and AI.',
+//       skills: {'data_analysis': 'Python, R', 'machine_learning': 'TensorFlow, Keras'},
+//       location: {'latitude': 5.5560, 'longitude': -0.1969},
+//       role: 'mentor',
+//       address: 'Tema, Ghana', id: '',
+//     ),
+//   ),
+//   Event(
+//     eventId: 'event3',
+//     creatorId: '77889',
+//     title: 'Networking Mixer',
+//     description: 'Connect with professionals in your industry.',
+//     startTime: DateTime(2024, 7, 20, 18, 0), // July 20, 2024, 6:00 PM
+//     endTime: DateTime(2024, 7, 20, 20, 0),   // July 20, 2024, 8:00 PM
+//     eventImage: 'https://example.com/event3.jpg',
+//     creator: UserModel(
+//       userId: '77889',
+//       name: 'Kofi Boateng',
+//       email: 'kofi.boateng@example.com',
+//       password: 'password202',
+//       profilePicture: 'https://randomuser.me/api/portraits/men/3.jpg',
+//       bio: 'Full-stack developer with expertise in web technologies.',
+//       skills: {'programming': 'JavaScript, React, Node.js', 'database': 'MongoDB, SQL'},
+//       location: {'latitude': 5.8267, 'longitude': -0.2931},
+//       role: 'mentor',
+//       address: 'Takoradi, Ghana', id: '',
+//     ),
+//   ),
+//   Event(
+//     eventId: 'event4',
+//     creatorId: '44556',
+//     title: 'Startup Pitch Competition',
+//     description: 'Pitch your startup idea to potential investors.',
+//     startTime: DateTime(2024, 7, 25, 13, 0), // July 25, 2024, 1:00 PM
+//     endTime: DateTime(2024, 7, 25, 15, 0),   // July 25, 2024, 3:00 PM
+//     eventImage: 'https://example.com/event4.jpg',
+//     creator: UserModel(
+//       userId: '44556',
+//       name: 'Yaa Nyarko',
+//       email: 'yaa.nyarko@example.com',
+//       password: 'password101',
+//       profilePicture: 'https://randomuser.me/api/portraits/women/1.jpg',
+//       bio: 'Marketing expert with a focus on social media strategy.',
+//       skills: {'marketing': 'SEO, Content Marketing', 'social_media': 'Facebook, Instagram'},
+//       location: {'latitude': 6.1300, 'longitude': -0.1962},
+//       role: 'mentee',
+//       address: 'Cape Coast, Ghana', id: '',
+//     ),
+//   ),
+//   Event(
+//     eventId: 'event5',
+//     creatorId: '67890',
+//     title: 'Panel Discussion on Digital Marketing',
+//     description: 'Insights from experts on the future of digital marketing.',
+//     startTime: DateTime(2024, 8, 1, 11, 0),  // August 1, 2024, 11:00 AM
+//     endTime: DateTime(2024, 8, 1, 13, 0),    // August 1, 2024, 1:00 PM
+//     eventImage: 'https://example.com/event5.jpg',
+//     creator: UserModel(
+//       userId: '67890',
+//       name: 'Ama Osei',
+//       email: 'ama.osei@example.com',
+//       password: 'password456',
+//       profilePicture: 'https://randomuser.me/api/portraits/women/2.jpg',
+//       bio: 'Graphic designer with a love for digital art.',
+//       skills: {'design': 'Photoshop, Illustrator', 'animation': 'After Effects'},
+//       location: {'latitude': 6.5244, 'longitude': -0.2333},
+//       role: 'mentee',
+//       address: 'Kumasi, Ghana', id: '',
+//     ),
+//   ),
+//   Event(
+//     eventId: 'event6',
+//     creatorId: '12345',
+//     title: 'Workshop on Mobile App Design',
+//     description: 'Hands-on session on designing user-friendly mobile apps.',
+//     startTime: DateTime(2024, 8, 5, 15, 0),  // August 5, 2024, 3:00 PM
+//     endTime: DateTime(2024, 8, 5, 17, 0),    // August 5, 2024, 5:00 PM
+//     eventImage: 'https://example.com/event6.jpg',
+//     creator: UserModel(
+//       userId: '12345',
+//       name: 'Kwame Mensah',
+//       email: 'kwame.mensah@example.com',
+//       password: 'password123',
+//       profilePicture: 'https://randomuser.me/api/portraits/men/1.jpg',
+//       bio: 'Software developer with a passion for mobile apps.',
+//       skills: {'programming': 'Dart, Flutter', 'design': 'UI/UX'},
+//       location: {'latitude': 5.6037, 'longitude': -0.1870},
+//       role: 'mentor',
+//       address: 'Accra, Ghana', id: '',
+//     ),
+//   ),
+// ];
 
 
 List<JobFeed> jobFeedDataList = [

@@ -1,5 +1,6 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:connecto/screens/jobs/notification_screen.dart';
+import 'package:connecto/screens/profile/profile_screen.dart';
 import 'package:connecto/services/auth_service.dart';
 import 'package:connecto/services/job_feed_service.dart';
 import 'package:flutter/material.dart';
@@ -298,7 +299,7 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
                 leading:  Icon(Icons.account_circle, color: Color.fromARGB(255, 128, 226, 177), size: 24),
                 title: const Text('View Profile', style: TextStyle(color: Colors.black87, fontSize: 16),),
                 onTap: () {
-                  Navigator.pop(context); 
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfileScreen(userId: _authService.getCurrentUser()!.uid)));
                 },
               ),
               ListTile(

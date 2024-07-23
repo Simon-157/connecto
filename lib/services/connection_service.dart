@@ -113,7 +113,7 @@ class ConnectionService {
    Future<List<UserModel>> getSuggestions(String userId) async {
     //  all users
     final allUsersSnapshot = await _users.get();
-    final allUsers = allUsersSnapshot.docs.map((doc) => UserModel.fromSnapshot(doc)).toList();
+    final allUsers = allUsersSnapshot.docs.map((doc) => UserModel.fromDocument(doc)).toList();
 
     //  all connections for the user
     final userConnectionsSnapshot = await _connections
@@ -138,6 +138,6 @@ class ConnectionService {
 
   Future<UserModel> getUser(String userId) async {
     final snapshot = await _firestore.collection('users').doc(userId).get();
-    return UserModel.fromSnapshot(snapshot);
+    return UserModel.fromDocument (snapshot);
   }
 }

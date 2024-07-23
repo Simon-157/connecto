@@ -1,3 +1,5 @@
+import 'package:connecto/models/notification_model.dart';
+import 'package:connecto/services/notification_service.dart';
 import 'package:connecto/utils/ui.dart';
 import 'package:flutter/material.dart';
 import 'package:connecto/screens/chat/chat_screen.dart';
@@ -22,6 +24,7 @@ class _ConnectionScreenState extends State<ConnectionScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final ConnectionService _connectionService = ConnectionService();
+  final NotificationService _notificationService = NotificationService();
   final AuthService _authService = AuthService();
   final Set<String> _requestedUsers = Set<String>();
 
@@ -154,11 +157,20 @@ class _ConnectionScreenState extends State<ConnectionScreen>
                                           .acceptConnectionRequest(
                                               connection.connectionId)
 
-                                          .then((value) => {
+                                          .then((value) async => {
                                                 if (mounted)
                                                   {
+
                                                     showSnackbar(context,
                                                         'Connection request accepted'),
+                                                    // send notification
+                                                      await _notificationService.createNotification(
+                                                        NotificationModel(userId: connection.userId,
+                                                        senderId: widget.currentUserId,
+                                                        type: 'new_message',
+                                                        message: '${user.name} accepted your connection request, ${connection.status}.', notificationId: '${DateTime.now().millisecondsSinceEpoch}', timestamp: DateTime.now(),)
+                                                      ),
+                                                                                                
                                                     setState(() {})
                                                   }
                               
@@ -247,9 +259,9 @@ class _ConnectionScreenState extends State<ConnectionScreen>
                             ),
                           );
                         } else if (userSnapshot.hasError) {
-                          return const ListTile(
+                          return  ListTile(
                             title: Text(
-                              'Error: ',
+                              'Error: ${userSnapshot.error}',
                               style: TextStyle(color: Colors.black),
                             ),
                           );
@@ -371,8 +383,23 @@ class _ConnectionScreenState extends State<ConnectionScreen>
                 IconButton(
                   onPressed: _requestedUsers.contains(user.id)
                       ? null
-                      : () {
+                      : () async {
                           _sendConnectionRequest(user.id);
+
+                          // send notification
+                         await _notificationService.createNotification(
+                            NotificationModel(
+                              userId: user.userId,
+                              senderId: widget.currentUserId,
+                              type: 'connection_request',
+                              message:
+                                  '${user.name} sent you a connection request.',
+                              notificationId:
+                                  '${DateTime.now().millisecondsSinceEpoch}',
+                              timestamp: DateTime.now(),
+                            ),
+                          );
+
                         },
                   icon: Icon(
                     _requestedUsers.contains(user.id)

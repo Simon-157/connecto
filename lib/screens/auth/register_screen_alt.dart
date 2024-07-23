@@ -12,6 +12,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
   bool _passwordVisible = false;
   bool _confirmPasswordVisible = false;
   bool _loading = false;
@@ -29,15 +30,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
     String email = _emailController.text.trim();
     String password = _passwordController.text.trim();
     String confirmPassword = _confirmPasswordController.text.trim();
+    String username = _usernameController.text.trim();
 
-    if (email.isNotEmpty && password.isNotEmpty && confirmPassword.isNotEmpty) {
+    if (email.isNotEmpty && password.isNotEmpty && confirmPassword.isNotEmpty && username.isNotEmpty) {
       if (password == confirmPassword) {
         // Passwords match, proceed with registration
         setState(() {
           _loading = true; 
         });
 
-        Object? user = await _authService.registerWithEmailAndPassword(email, password, 'anonymoususer');
+        Object? user = await _authService.registerWithEmailAndPassword(email, password, username);
 
         setState(() {
           _loading = false;
@@ -134,6 +136,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        TextField(
+                          controller: _usernameController,
+                          decoration: InputDecoration(
+                            labelText: "Username",
+                            labelStyle: const TextStyle(color: Colors.white),
+                            filled: true,
+                            fillColor: Colors.white.withOpacity(0.3),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                              borderSide: BorderSide.none,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20.0),
                         TextField(
                           controller: _emailController,
                           decoration: InputDecoration(
@@ -291,7 +307,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               child: const Text(
                                 "Login Now",
                                 style: TextStyle(
-                                  color: Colors.blueAccent,
+                                  color: Colors.yellow,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -305,13 +321,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ],
             ),
           ),
-          // Loading indicator
           if (_loading)
-            Container(
-              color: Colors.black.withOpacity(0.5),
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
+            const Center(
+              child: CircularProgressIndicator(),
             ),
         ],
       ),

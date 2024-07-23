@@ -55,7 +55,7 @@ final userProfile = UserProfile(
     Demo(
       'Connecto app',
       'react, node, redux, stripe',
-      'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+      'https://firebasestorage.googleapis.com/v0/b/connecto-428002.appspot.com/o/sample_video.mp4%20(240p).mp4?alt=media&token=44fd0bed-e198-4703-b344-f8dece291432',
       'https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg',
       10000,
       '3 yrs ago'
@@ -63,7 +63,7 @@ final userProfile = UserProfile(
     Demo(
       'Connecto app',
       'react, node, redux, stripe',
-      'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+      'https://https://firebasestorage.googleapis.com/v0/b/connecto-428002.appspot.com/o/sample_video.mp4%20(240p).mp4?alt=media&token=44fd0bed-e198-4703-b344-f8dece291432',
       'https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg',
       10000,
       '3 yrs ago'

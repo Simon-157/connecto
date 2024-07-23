@@ -216,9 +216,9 @@ Widget _buildMentorCard(UserModel mentor) {
       borderRadius: BorderRadius.circular(15),
       child: Stack(
         children: [
-          mentor.profilePicture != null
+          mentor.profilePicture.isNotEmpty
               ? Image.network(
-                  mentor.profilePicture!,
+                  mentor.profilePicture,
                   fit: BoxFit.cover,
                   height: double.infinity,
                   width: double.infinity,

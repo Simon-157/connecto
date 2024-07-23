@@ -160,24 +160,6 @@ Future<void> updateUserToken(String userToken) async {
     }
   }
 
-  // Update user profile
-  Future<void> updateProfile(String name) async {
-    try {
-      User? user = _auth.currentUser;
-      await user?.updateProfile(displayName: name);
-      await user?.reload();
-      user = _auth.currentUser;
-
-      // Update Firestore user document
-      await _firestore.collection('users').doc(user?.uid).update({
-        'name': name,
-      });
-    } catch (error) {
-      print(error.toString());
-      return null;
-    }
-  }
-
   // Get current user
   User? getCurrentUser() {
     try {
@@ -198,6 +180,31 @@ Future<UserModel> getUserData() async {
     throw Exception("Error fetching user data from Firestore");
   }
 }
+
+
+  // get user by id
+  Future<UserModel> getUserById(String userId) async {
+    print(userId);
+    try {
+      DocumentSnapshot snapshot = await _firestore.collection('users').doc(userId).get();
+      print(snapshot.data());
+      return UserModel.fromDocument(snapshot);
+    } catch (error) {
+      print(error.toString());
+      throw Exception("Error fetching user data from Firestore");
+    }
+  }
+
+  // Update user details by user ID in Firestore
+  Future<void> updateUserDetails(String userId, Map<String, dynamic> data) async {
+    try {
+      await _firestore.collection('users').doc(userId).update(data);
+    } catch (error) {
+      print('Error updating user data in Firestore: $error');
+      throw Exception("Error updating user data");
+    }
+  }
+
 
 
   // get all users
