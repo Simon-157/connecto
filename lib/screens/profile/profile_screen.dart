@@ -1,4 +1,8 @@
+import 'package:connecto/models/job_applications_model.dart';
+import 'package:connecto/models/user_model.dart';
 import 'package:connecto/screens/profile/customize_profile.dart';
+import 'package:connecto/services/auth_service.dart';
+import 'package:connecto/services/job_application_service.dart';
 import 'package:connecto/utils/dummy.dart';
 import 'package:connecto/widgets/profile/demo_widget.dart';
 import 'package:connecto/widgets/profile/profile_widgets.dart';
@@ -15,29 +19,55 @@ class UserProfileScreen extends StatefulWidget {
 
 class _UserProfileScreenState extends State<UserProfileScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  UserModel? userProfile;
+  final AuthService _authService = AuthService();
+  final JobApplicationsService _jobApplicationsService = JobApplicationsService();
+  List<JobApplicationsModel> userApplications = [];
 
   @override
   void initState() {
     super.initState();
+    _fetchUserProfile();
+    _fetchUserApplications();
     _tabController = TabController(length: 3, vsync: this);
   }
 
+  // Fetch user profile data
+  void _fetchUserProfile() async {
+    UserModel? user = await _authService.getUserById(widget.userId);
+    setState(() {
+      userProfile = user;
+    });
+  }
+
+  // Fetch user job applications data
+  void _fetchUserApplications() async {
+    List<JobApplicationsModel> applications = await _jobApplicationsService.getJobApplicationsByUserId(widget.userId);
+    setState(() {
+      userApplications = applications;
+    });
+  }
+
   Widget _buildTabContent(int index) {
+    if (userProfile == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     switch (index) {
       case 0:
-        return const Center(
-          child: Text(
-            'Applications Tab Content',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black54),
-          ),
+        return ListView.builder(
+          itemCount: userApplications.length,
+          itemBuilder: (context, index) {
+            return JobApplicationTile(application: userApplications[index]);
+          },
         );
       case 1:
         return ListView(
-          children: userProfile.skills.map((skill) => SkillCard(skill: skill)).toList(),
+          children: userProfile!.skills!.map((skill) => SkillCard(skill: skill)).toList(),
         );
       case 2:
         return ListView(
-          children: userProfile.demos.map((demo) => DemoCard(demo: demo)).toList(),
+          children: userProfile!.demos!.map((demo) => DemoCard(demo: demo)).toList(),
         );
       default:
         return const Center(
@@ -86,7 +116,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> with SingleTicker
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
                       color: Colors.white,
-                      boxShadow: [const BoxShadow(color: Colors.black12, blurRadius: 4.0)],
+                      boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4.0)],
                     ),
                     child: const ListTile(
                       leading: Icon(Icons.person, color: Colors.black54),
@@ -100,7 +130,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> with SingleTicker
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
                       color: Colors.white,
-                      boxShadow: [const BoxShadow(color: Colors.black12, blurRadius: 4.0)],
+                      boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4.0)],
                     ),
                     child: const ListTile(
                       leading: Icon(Icons.logout, color: Colors.black54),
@@ -114,7 +144,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> with SingleTicker
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
                       color: Colors.white,
-                      boxShadow: [const BoxShadow(color: Colors.black12, blurRadius: 4.0)],
+                      boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4.0)],
                     ),
                     child: const ListTile(
                       leading: Icon(Icons.privacy_tip, color: Colors.black54),
@@ -128,7 +158,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> with SingleTicker
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
                       color: Colors.white,
-                      boxShadow: [const BoxShadow(color: Colors.black12, blurRadius: 4.0)],
+                      boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4.0)],
                     ),
                     child: const ListTile(
                       leading: Icon(Icons.settings, color: Colors.black54),
@@ -148,32 +178,55 @@ class _UserProfileScreenState extends State<UserProfileScreen> with SingleTicker
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.black,
       ),
-      body: Column(
-        children: [
-          UserProfileHeader(profile: userProfile),
-          TabBar(
-            controller: _tabController,
-            labelColor: Colors.black,
-            unselectedLabelColor: Colors.grey,
-            indicatorColor: Colors.black,
-            tabs: const [
-              Tab(text: 'Applications'),
-              Tab(text: 'Skills'),
-              Tab(text: 'Demos'),
-            ],
-          ),
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
+      body: userProfile == null
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
               children: [
-                _buildTabContent(0),
-                _buildTabContent(1),
-                _buildTabContent(2),
+                userProfile!.role == 'admin'
+                    ? UserProfileHeader(profile: dummyUserProfile)
+                    : UserProfileHeader(profile: userProfile ?? dummyUserProfile),
+                TabBar(
+                  controller: _tabController,
+                  labelColor: Colors.black,
+                  unselectedLabelColor: Colors.grey,
+                  indicatorColor: Colors.black,
+                  tabs: const [
+                    Tab(text: 'Applications'),
+                    Tab(text: 'Skills'),
+                    Tab(text: 'Demos'),
+                  ],
+                ),
+                Expanded(
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      _buildTabContent(0),
+                      _buildTabContent(1),
+                      _buildTabContent(2),
+                    ],
+                  ),
+                ),
               ],
             ),
-          ),
-        ],
-      ),
+    );
+  }
+}
+
+class JobApplicationTile extends StatelessWidget {
+  final JobApplicationsModel application;
+
+  const JobApplicationTile({required this.application});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Icon(Icons.work, color: Colors.black54),
+      title: Text(application.applicantId, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black87)),
+      subtitle: Text('Applied on: some time ago', style: TextStyle(color: Colors.black54)),
+      trailing: Icon(Icons.chevron_right, color: Colors.black54),
+      onTap: () {
+        // Handle tile tap, e.g., navigate to detailed view of the job application
+      },
     );
   }
 }

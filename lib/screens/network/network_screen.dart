@@ -1,4 +1,5 @@
 import 'package:connecto/models/notification_model.dart';
+import 'package:connecto/screens/profile/profile_screen.dart';
 import 'package:connecto/services/notification_service.dart';
 import 'package:connecto/utils/ui.dart';
 import 'package:flutter/material.dart';
@@ -27,12 +28,22 @@ class _ConnectionScreenState extends State<ConnectionScreen>
   final NotificationService _notificationService = NotificationService();
   final AuthService _authService = AuthService();
   final Set<String> _requestedUsers = Set<String>();
+  UserModel? _currentUser;
 
   @override
   void initState() {
     super.initState();
     widget.currentUserId = _authService.getCurrentUser()?.uid ?? '';
     _tabController = TabController(length: 3, vsync: this);
+  }
+
+
+  Future<UserModel> _getCurrentUser() async {
+    _currentUser ??= await _authService.getUserData();
+    if (_currentUser == null) {
+      throw Exception('User is null');
+    }
+    return _currentUser!;
   }
 
   @override
@@ -67,8 +78,7 @@ class _ConnectionScreenState extends State<ConnectionScreen>
             },
             child: CircleAvatar(
               backgroundImage: NetworkImage(
-                  _authService.getCurrentUser()?.photoURL ??
-                      'https://via.placeholder.com/150'),
+                  _currentUser?.profilePicture ?? 'https://placeholder.com/150'),
             ),
           ),
           const SizedBox(width: 16),
@@ -133,8 +143,8 @@ class _ConnectionScreenState extends State<ConnectionScreen>
                           return ListTile(
                             leading: CircleAvatar(
                               backgroundImage: NetworkImage(
-                                  user.profilePicture ??
-                                      'https://via.placeholder.com/150'),
+                                  user.profilePicture
+                                      ),
                             ),
                             title: Text(user.name,
                                 style: const TextStyle(
@@ -393,7 +403,7 @@ class _ConnectionScreenState extends State<ConnectionScreen>
                               senderId: widget.currentUserId,
                               type: 'connection_request',
                               message:
-                                  '${user.name} sent you a connection request.',
+                                  '${user.name}, received a connection request.',
                               notificationId:
                                   '${DateTime.now().millisecondsSinceEpoch}',
                               timestamp: DateTime.now(),
@@ -423,7 +433,7 @@ class _ConnectionScreenState extends State<ConnectionScreen>
       child: ListTile(
         leading: CircleAvatar(
           backgroundImage: NetworkImage(
-              user.profilePicture ?? 'https://via.placeholder.com/150'),
+              user.profilePicture),
         ),
         title: Text(user.name,
             style: const TextStyle(
@@ -472,7 +482,8 @@ class _ConnectionScreenState extends State<ConnectionScreen>
                   style: TextStyle(color: Colors.black87, fontSize: 16),
                 ),
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => UserProfileScreen(userId: _authService.getCurrentUser()!.uid)));
+
                 },
               ),
               ListTile(

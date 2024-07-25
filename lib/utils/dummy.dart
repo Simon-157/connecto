@@ -1,51 +1,9 @@
-class Skill {
-  final String name;
-  final String level;
-  final int proficiency;
+import 'package:connecto/models/user_model.dart';
 
-  Skill(this.name, this.level, this.proficiency);
-}
-
-class Demo {
-  final String title;
-  final String description;
-  final String videoUrl;
-  final String thumbnailUrl;
-  final int views;
-  final String timeAgo;
-
-  Demo(this.title, this.description, this.videoUrl, this.thumbnailUrl, this.views, this.timeAgo);
-}
-
-class UserProfile {
-  final String name;
-  final String username;
-  final int experience;
-  final double rating;
-  final String bio;
-  final String avatarUrl;
-  final List<Skill> skills;
-  final List<Demo> demos;
-
-  UserProfile({
-    required this.name,
-    required this.username,
-    required this.experience,
-    required this.rating,
-    required this.bio,
-    required this.avatarUrl,
-    required this.skills,
-    required this.demos,
-  });
-}
-
-final userProfile = UserProfile(
+final dummyUserProfile = UserModel(
   name: 'Dev Goog',
-  username: '@metgoog',
-  experience: 2,
-  rating: 4.4,
   bio: 'My name is dev goog. I am a software engineer and I love coding and building stuff.',
-  avatarUrl: 'https://randomuser.me/api/portraits/men/1.jpg',
+  profilePicture: 'https://randomuser.me/api/portraits/men/1.jpg',
   skills: [
     Skill('Web Development', 'Intermediate', 70),
     Skill('UI/UX Design', 'Beginner', 40),
@@ -68,5 +26,5 @@ final userProfile = UserProfile(
       10000,
       '3 yrs ago'
     ),
-  ],
+  ], id: '', userId: '', email: '', address: '', password: '', role: '',
 );

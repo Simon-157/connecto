@@ -84,7 +84,7 @@ class _MessageBubbleState extends State<MessageBubble> {
                       if (!widget.isMe)
                         CircleAvatar(
                           backgroundImage: sender.profilePicture != null
-                              ? NetworkImage(sender.profilePicture!)
+                              ? NetworkImage(sender.profilePicture)
                               : SvgPicture.asset('assets/icons/avatar.svg') as ImageProvider<Object>,
                           radius: 15.0,
                         ),

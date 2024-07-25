@@ -75,9 +75,9 @@ class NotificationService {
       message.notification!.body,
       const NotificationDetails(
         android: AndroidNotificationDetails(
-          'your_channel_id',
-          'your_channel_name',
-          channelDescription: 'your_channel_description',
+          'channel id',
+          'channel name',
+          channelDescription: 'channel description',
           importance: Importance.high,
           priority: Priority.high,
         ),

@@ -1,4 +1,10 @@
+import 'package:connecto/models/job_applications_model.dart';
 import 'package:connecto/models/job_feed_model.dart';
+import 'package:connecto/models/user_model.dart';
+import 'package:connecto/screens/chat/chat_screen.dart';
+import 'package:connecto/screens/jobs/job_applicants_screen.dart';
+import 'package:connecto/services/auth_service.dart';
+import 'package:connecto/services/job_application_service.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
@@ -12,7 +18,35 @@ class JobDetailScreen extends StatefulWidget {
 }
 
 class _JobDetailScreenState extends State<JobDetailScreen> {
-  bool showDescription = true;
+  bool showDescription = false;
+
+  AuthService _authService = AuthService();
+  JobApplicationsService jobService = JobApplicationsService();
+  UserModel? _currentUser;
+  bool _isApplied = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _getCurrentUser();
+    _checkIfApplied();
+  }
+
+  // check if current user has applied to the job
+  Future<void> _checkIfApplied() async {
+    List<JobApplicationsModel> appliedJobs = await jobService.getJobApplicationsByUserId(_authService.getCurrentUser()!.uid);
+    setState(() {
+      _isApplied = appliedJobs.any((job) => job.jobId == widget.job.feedId);
+    });
+  }
+
+  Future<UserModel> _getCurrentUser() async {
+    _currentUser ??= await _authService.getUserData();
+    if (_currentUser == null) {
+      throw Exception('User is null');
+    }
+    return _currentUser!;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -309,22 +343,97 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                FloatingActionButton(
+                _authService.getCurrentUser()!.uid != widget.job.creatorId ? FloatingActionButton(
                   onPressed: () {
-                    // TODO:Implement chat logic 
+                    
+                    Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ChatScreen(
+                                      userId: _authService.getCurrentUser()!.uid,
+                                      receiverId: widget.job.creatorId,
+                                    ),
+                                  ),
+                                );
                   },
                   child: const Icon(Icons.chat),
-                ),
+                ): Container(),
                 ElevatedButton(
-                  onPressed: () {
-                    // TODO:Implement apply logic here
+                  onPressed: () async {
+                    
+                    if (_authService.getCurrentUser()!.uid == widget.job.creatorId) {
+                      Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => JobApplicantsScreen(jobId: widget.job.feedId),
+                                  ),
+                                );
+                    } 
+                    
+                    else {
+                      if(_isApplied){ 
+                        await jobService.deleteJobApplication(_currentUser!.userId, widget.job.feedId);
+                        showDialog(context: context, builder: (context) {
+                          return AlertDialog(
+                            title: const Text('Success', style: TextStyle(color: Colors.green),),
+                            content: const Text('You have successfully withdrawn your application', style: TextStyle(color: Colors.green),),
+                            actions: [
+                              TextButton(onPressed: () {
+                                Navigator.pop(context);
+                              }, child: const Text('OK'))
+                            ],
+                          );
+                        });
+                      }
+                     
+                      
+                      else{
+                     await  jobService.addJobApplication(
+                      new JobApplicationsModel(
+                        applicantId: _authService.getCurrentUser()!.uid, 
+                        jobId: widget.job.feedId, 
+                        status: 'submitted',
+                        applicantName: _currentUser!.name,
+                        applicantPhotoUrl: _currentUser!.profilePicture,
+                        creatorId: widget.job.creatorId
+          
+                      )
+                     )
+                     .then((value) =>  
+                     showDialog(context: context, builder: (context) {
+                       return AlertDialog(
+                         title: const Text('Success', style: TextStyle(color: Colors.green),),
+                         content: const Text('You have successfully applied to this job', style: TextStyle(color: Colors.green),),
+                         actions: [
+                           TextButton(onPressed: () {
+                             Navigator.pop(context);
+                           }, child: const Text('OK'))
+                         ],
+                       );
+                     })
+
+                     ).catchError((error) =>
+                     showDialog(context: context, builder: (context) {
+                       return AlertDialog(
+                         title: const Text('Error', style: TextStyle(color: Colors.red),),
+                         content: Text('Sorry Application Not Submitted. $error', style: const TextStyle(color: Colors.red),),
+                         actions: [
+                           TextButton(onPressed: () {
+                             Navigator.pop(context);
+                           }, child: const Text('OK'))
+                         ],
+                       );
+                     })
+                     );
+
+                    }}
                   },
-                  child: const Text('Apply Now'),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 50.0, vertical: 15.0),
                     textStyle: const TextStyle(fontSize: 18.0),
                   ),
+                  child:  _authService.getCurrentUser()!.uid == widget.job.creatorId ? const Text('View Applicants') : _isApplied  ? const Text('Withdraw') : const Text('Apply Now '),
                 ),
               ],
             ),

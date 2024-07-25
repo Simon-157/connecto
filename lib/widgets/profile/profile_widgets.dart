@@ -1,9 +1,10 @@
 
-import 'package:connecto/utils/dummy.dart';
+// import 'package:connecto/utils/dummy.dart';
+import 'package:connecto/models/user_model.dart';
 import 'package:flutter/material.dart';
 
 class UserProfileHeader extends StatelessWidget {
-  final UserProfile profile;
+  final UserModel profile;
 
   UserProfileHeader({required this.profile});
 
@@ -13,21 +14,21 @@ class UserProfileHeader extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 40,
-          backgroundImage: NetworkImage(profile.avatarUrl),
+          backgroundImage: NetworkImage(profile.profilePicture),
         ),
         SizedBox(height: 8),
         Text(
-          profile.username,
+          profile.name,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
         ),
         SizedBox(height: 4),
-        Text('${profile.experience} yrs Experience', style: TextStyle(color: Colors.grey[850], fontSize: 14)),
+        Text('2 yrs Experience', style: TextStyle(color: Colors.grey[850], fontSize: 14)),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Row(
               children: List.generate(5, (index) {
-                if (index < profile.rating) {
+                if (index < 4) {
                   return Icon(Icons.star, color: Colors.amber);
                 } else {
                   return Icon(Icons.star, color: Colors.grey);
@@ -36,7 +37,7 @@ class UserProfileHeader extends StatelessWidget {
             ),
             Icon(Icons.star, color: Colors.amber),
 
-            Text('${profile.rating} Ratings', style: TextStyle(color: Colors.grey[850], fontSize: 14)),
+            Text('3 Ratings', style: TextStyle(color: Colors.grey[850], fontSize: 14)),
           ],
         ),
         SizedBox(height: 8),
@@ -44,7 +45,7 @@ class UserProfileHeader extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             children: [
-              Text(profile.bio,maxLines: 2, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: TextStyle(color: Colors.grey[850], fontSize: 16)),
+              Text(profile.bio?? "No bio yet",maxLines: 2, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: TextStyle(color: Colors.grey[850], fontSize: 16)),
               SizedBox(height: 8),
             ],
           ),

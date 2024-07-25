@@ -1,4 +1,5 @@
 import 'package:connectivity/connectivity.dart';
+import 'package:connecto/models/user_model.dart';
 import 'package:connecto/screens/jobs/notification_screen.dart';
 import 'package:connecto/screens/profile/profile_screen.dart';
 import 'package:connecto/services/auth_service.dart';
@@ -16,14 +17,23 @@ class JobFeedScreen extends StatefulWidget {
 class _JobFeedScreenState extends State<JobFeedScreen> {
   bool _isConnected = true;
   late Future<List<JobFeed>> _jobFeedsFuture;
-
   final AuthService _authService = AuthService();
+  UserModel? _currentUser;
 
   @override
   void initState() {
     super.initState();
     _checkInternetConnection();
     _jobFeedsFuture = JobFeedService.fetchJobFeeds();
+    _getCurrentUser();
+  }
+
+  Future<UserModel> _getCurrentUser() async {
+    _currentUser ??= await _authService.getUserData();
+    if (_currentUser == null) {
+      throw Exception('User is null');
+    }
+    return _currentUser!;
   }
 
   Future<void> _checkInternetConnection() async {
@@ -67,7 +77,7 @@ class _JobFeedScreenState extends State<JobFeedScreen> {
             },
             child: CircleAvatar(
               backgroundImage:
-                  NetworkImage(_authService.getCurrentUser()?.photoURL ?? 'https://via.placeholder.com/150'),
+                  NetworkImage(_currentUser?.profilePicture ?? 'https://via.placeholder.com/150'),
             ),
           ),
           const SizedBox(width: 16),

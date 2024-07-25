@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 
 class JobFeedService {
-  static const String baseUrl = 'https://connectoapi-production.up.railway.app';
+  static const String baseUrl = 'https://connectoapi-production.up.railway.app';  
 
   // Fetch all job feeds
   static Future<List<JobFeed>> fetchJobFeeds() async {

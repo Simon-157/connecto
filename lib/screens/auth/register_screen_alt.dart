@@ -46,7 +46,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         });
 
         if (user != null && user is User) {
-          Navigator.pushReplacementNamed(context, '/home');
+          _authService.signOut(context);
+          Navigator.pushReplacementNamed(context, '/login');
         } else if (user is String) {
           _showErrorDialog("Registration Failed", "Failed to register. Please try again. Error: $user");
         }

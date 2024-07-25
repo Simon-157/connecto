@@ -247,7 +247,7 @@ class _MessageInputState extends State<MessageInput> {
                   Navigator.pop(context); // Close preview
                   await _sendMessage();
                 },
-                child: const Text('Send'),
+                child: const Text('Send', style: TextStyle(color: Colors.blueAccent)),
               ),
             ],
           ),

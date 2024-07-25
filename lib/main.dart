@@ -1,5 +1,5 @@
 import 'package:connecto/screens/auth/login_screen.dart';
-import 'package:connecto/screens/auth/register_screen.dart';
+import 'package:connecto/screens/auth/register_screen_alt.dart';
 import 'package:connecto/screens/onboarding/splash_screen.dart';
 import 'package:connecto/screens/sessions/create_schedule_screen.dart';
 import 'package:connecto/services/notification_service.dart';

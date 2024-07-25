@@ -1,11 +1,10 @@
-import 'dart:io';
 import 'package:connecto/models/user_model.dart';
 import 'package:connecto/services/auth_service.dart';
 import 'package:connecto/widgets/profile/update_demo.dart';
 import 'package:connecto/widgets/profile/update_general_info.dart';
 import 'package:connecto/widgets/profile/update_skills.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+
 
 class ProfileCustomizationScreen extends StatefulWidget {
   final String userId;
@@ -73,22 +72,7 @@ class _ProfileCustomizationScreenState extends State<ProfileCustomizationScreen>
   Future<void> _uploadProfileData() async {
     try {
       if (userProfile != null) {
-        // Ensure profile picture exists before uploading
-        // if (userProfile!.profilePicture.isNotEmpty) {
-        //   File profileImageFile = File(userProfile!.profilePicture);
-        //   if (profileImageFile.existsSync()) {
-        //     String fileName = profileImageFile.uri.pathSegments.last;
-        //     Reference storageRef = FirebaseStorage.instance.ref().child('profile_images/$fileName');
-        //     UploadTask uploadTask = storageRef.putFile(profileImageFile);
-        //     TaskSnapshot taskSnapshot = await uploadTask;
-        //     String downloadUrl = await taskSnapshot.ref.getDownloadURL();
-
-        //     // Update profile picture URL
-        //     userProfile!.profilePicture = downloadUrl;
-        //   } else {
-        //     print('Profile picture file does not exist.');
-        //   }
-        // }
+       
 
         await _authService.updateUserDetails(widget.userId, {
           'address': userProfile!.address,

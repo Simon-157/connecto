@@ -1,4 +1,5 @@
-import 'package:connecto/utils/dummy.dart';
+// import 'package:connecto/utils/dummy.dart';
+import 'package:connecto/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
